@@ -28,60 +28,72 @@ function fetchJson(url) {
 // Sleep helper
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-// Top 50 popular tokens (always priority)
-const POPULAR_TOKENS = [
-  'So11111111111111111111111111111111111111112', // SOL
-  'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', // USDC
-  'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB', // USDT
-  'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263', // BONK
-  'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN', // JUP
-  'EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm', // WIF
-  'HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3', // PYTH
-  'jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL', // JTO
-  'mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So', // mSOL
-  '7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj', // stSOL
-  'hntyVP6YFm1Hg25TN9WGLqM12b1TRezMtJJmsZ4MTYVU', // HNT
-  'SHDWyBxihqiCj6YekG2GUr7wqKLeLAMK1gHZck9pL6y', // SHDW
-  '7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs', // ETH (Wormhole)
-  'A9mUU4qviSctJVPJdBJWkb28deg915LYJKrzQ19ji3FM', // USDCet (Portal)
-  'Saber2gLauYim4Mvftnrasomsv6NvAuncvMEZwcLpD1', // SBR
-  'RLBxxFkseAZ4RgJH3Sqn8jXxhmGoz9jWxDNJMh8pL7a', // RLB
-  '5oVNBeEEQvYi1cX3ir8Dx5n1P7pdxydbGF2X4TxVusJm', // INF
-  'kinXdEcpDQeHPEuQnqmUgtYykqKGVFq6CeVX5iAHJq6', // KIN
-  'AGFEad2et2ZJif9jaGpdMixQqvW5i81aBdvKe7PHNfz3', // FIDA
-  'FTT9VzRCKnutdQZpP8dhsZPbVLXSgBxVkBhKh9PmJnxb', // STEP
-  'EchesyfXePKdLtoiZSL8pBe8Myagyy8ZRqsACNCFGnvp', // FANT
-  'GFX1ZjR2P15tmrSwow6FjyDYcEkoFb4p4gJCpLBjaxHD', // GOFX
-  'BXXkv6z8ykpG1yuvUDPgh732wzVHB69RnB9YgSYh3itW', // C98
-  '6naWDMGNWwqffJnnXFLBCLaYu1y5U9Rohe5wwJPHvf1p', // PORT
-  'MangoCzJ36AjZyKwVj3VnYU4GTonjfVEnJmvvWaxLac', // MNGO
-  'CASHVDm2wsJXfhj6VWxb7GiMdoLc17Du7paH4bNr5woT', // CASH
-  '4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R', // RAY
-  'Gsai2KN28MTGcSZ1gKYFswUpFpS7EM9mvdR9e6kuW5VX', // ATLAS
-  'ATLASXmbPQxBUYbxPsV97usA3fPQYEqzQBUHgiFCUsXx', // POLIS
-  'SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt', // SRM
-  'Comp4ssDzXcLeu2MnLuGNNFC4cmLPMng8qWHPvzAMU1h', // COMP
-  '9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E', // BTC (Wormhole)
-  '2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk', // WSETH
-  'xxxxa1sKNGwFtw2kFn8XauW9xq8hBZ5kVtcSesTT9fW', // SLND
-  'z3dn17yLaGMKffVogeFHQ9zWVcXgqgf3PQnDsNs2g6M', // ORCA
-  'MEW1gQWJ3nEXg2qgERiKu7FAFj79PHvQVREQUzScPP5', // MEW
-  '7GCihgDB8fe6KNjn2MYtkzZcRjQy3t9GHdC8uHYmW2hr', // POPCAT
-  'Bn113WT6rbdgwrm12UJtnmNqGqZjY4it2WoUQuQopFVn', // TREMP
-  'ukHH6c7mMyiWCf1b9pnWe25TSpkDDt3H5pQZgZ74J82', // BOME
-  'SLoth9dK7ryUmFJ4YYhKv4jXcq53j9PiK6SgYAL6gFs', // SLOTH
-  'EdAhkbj5nF9sRM7XN7ewuW8C9XEUMs8P7cnoQ57SYE96', // MYRO
-  'WENWENvqqNya429ubCdR81ZmD69brwQaaBYY6p3LCpk', // WEN
-  'GDfnEsia2WLAW5t8yx2X5j2mkfA74i5kwGdDuZHt7XmG', // PONKE
-  'CKaKtYvz6dKPyMvYq9Rh3UBrnNqYZAyd7iF4hJtjUvks', // GECKO
-  'So11111111111111111111111111111111111111111', // WSOL
-  'Taki7fi3Zicv7Du1xNAWLaf6mRK7ikdn77HeGzgwvo4', // TAKI
-  '8cn7JcYVjDZesLa3RTt3NXne4mWms2YYFe2rbCxVLKv1', // MOUTAI
-  '9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i', // UST
-  'GEJpt3Wjmr628FqXxTgxMce1pLntckPf1qmCy2oj1vyC', // GENOPETS
-  'EPeUFDgHRxs9xxEPVaL6kfGQvCon7jmAWKVUHuux1Tpz', // BAT
-  'CvB1ztJvpYQPvdPBePtRzjL4aQidjydtUz61NWgcgQtP' // COPE
-];
+/**
+ * Fetch top 50 popular tokens dynamically from CoinGecko by market cap
+ * Updates every run to always have the most trending tokens
+ */
+async function fetchTop50PopularTokens() {
+  console.log('🔥 Fetching top 50 popular tokens by market cap...');
+
+  try {
+    // Fetch top 50 from multiple categories for diversity
+    const categories = [
+      'solana-meme-coins',      // Top memecoins
+      'solana-ecosystem',       // Top DeFi/ecosystem
+    ];
+
+    const allTopTokens = [];
+    const seen = new Set();
+
+    for (const category of categories) {
+      try {
+        const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&category=${category}&order=market_cap_desc&per_page=50&page=1&sparkline=false`;
+        const data = await fetchJson(url);
+
+        data.forEach(coin => {
+          const solAddress = coin.platforms?.solana;
+          if (solAddress && !seen.has(solAddress)) {
+            seen.add(solAddress);
+            allTopTokens.push({
+              address: solAddress,
+              symbol: coin.symbol?.toUpperCase(),
+              name: coin.name,
+              marketCap: coin.market_cap || 0
+            });
+          }
+        });
+
+        await sleep(1500); // CoinGecko rate limit
+      } catch (error) {
+        console.error(`  ❌ Error fetching ${category}:`, error.message);
+      }
+    }
+
+    // Sort by market cap and take top 50
+    const top50 = allTopTokens
+      .sort((a, b) => b.marketCap - a.marketCap)
+      .slice(0, 50)
+      .map(t => t.address);
+
+    console.log(`✅ Loaded ${top50.length} top tokens by market cap`);
+    return top50;
+
+  } catch (error) {
+    console.error('❌ Failed to fetch top 50, using fallback list:', error.message);
+
+    // Fallback to hardcoded essentials
+    return [
+      'So11111111111111111111111111111111111111112', // SOL
+      'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', // USDC
+      'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB', // USDT
+      'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263', // BONK
+      'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN', // JUP
+      'EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm', // WIF
+      'HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3', // PYTH
+      'jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL', // JTO
+    ];
+  }
+}
 
 /**
  * Load existing token list to avoid re-fetching
@@ -432,6 +444,10 @@ async function buildMegaTokenList() {
   const stats = {};
   const allTokens = [];
 
+  // Fetch top 50 popular tokens dynamically
+  const POPULAR_TOKENS = await fetchTop50PopularTokens();
+  console.log('');
+
   // Load existing tokens for incremental discovery
   const existingTokens = loadExistingTokens();
   const knownAddresses = getKnownAddresses(existingTokens);
@@ -542,6 +558,7 @@ async function buildMegaTokenList() {
       newThisRun: newTokensAdded,
       discoveryRate: parseFloat(discoveryRate)
     },
+    popularTokens: POPULAR_TOKENS, // Top 50 by market cap
     tokens: sorted,
     count: sorted.length
   };
