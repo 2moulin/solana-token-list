@@ -1,12 +1,11 @@
-// MEGA Token List Crawler v3
-// Aggressive DexScreener fetching: 300 requests per 15 minutes
-// Fetches: Solana Labs + DexScreener (300 tokens per run)
-// Updates daily via GitHub Actions
+// MEGA Token List Crawler v4 - ULTIMATE EDITION
+// Multi-Source Discovery: DexScreener + CoinGecko + Jupiter + Raydium + Orca
+// 12 runs/day (every 2 hours) - Smart rotation strategy
+// Incremental discovery: Only fetch NEW tokens
 
 const https = require('https');
 const http = require('http');
 const fs = require('fs');
-const path = require('path');
 
 // Fetch helper
 function fetchJson(url) {
@@ -84,137 +83,151 @@ const POPULAR_TOKENS = [
   'CvB1ztJvpYQPvdPBePtRzjL4aQidjydtUz61NWgcgQtP' // COPE
 ];
 
-// 300 search queries to maximize DexScreener coverage
-// These are trending tokens, memecoins, DeFi, and infrastructure projects
-const SEARCH_QUERIES = [
-  // Top tier memecoins & trending
-  'bonk', 'wif', 'popcat', 'myro', 'bome', 'wen', 'tremp', 'mew',
-  'sloth', 'ponke', 'billy', 'gme', 'smog', 'gecko', 'foxy', 'harambe',
-  'duko', 'silly', 'nub', 'maneki', 'catwifhat', 'michi', 'hobbes',
-
-  // DeFi protocols
-  'jup', 'jto', 'pyth', 'orca', 'ray', 'mngo', 'fida', 'step',
-  'saber', 'port', 'sunny', 'tulip', 'quarry', 'apricot', 'francium',
-  'larix', 'mercurial', 'sencha', 'lifinity', 'hawksight', 'kamino',
-  'drift', 'zeta', 'mango', 'zo', 'cypher', 'hxro', 'psyoptions',
-
-  // Staking & Liquid staking
-  'msol', 'stsol', 'jsol', 'scnsol', 'daosolsol', 'bsol', 'compasssol',
-
-  // Infrastructure & oracles
-  'render', 'rndr', 'helium', 'hnt', 'mobile', 'iot', 'shdw', 'nosana',
-  'nos', 'render', 'livepeer', 'arweave', 'storj',
-
-  // Gaming & metaverse
-  'atlas', 'polis', 'genopets', 'gene', 'cheems', 'aurory', 'aury',
-  'monkeydao', 'nyan', 'degen', 'cets', 'fronk', 'samoyedcoin',
-
-  // Cross-chain bridges & wrapped assets
-  'eth', 'btc', 'weth', 'wbtc', 'avax', 'bnb', 'matic', 'ftm',
-  'usdc', 'usdt', 'dai', 'busd', 'usdh', 'uxd', 'usdd',
-
-  // NFT & creators
-  'dust', 'forge', 'cope', 'media', 'only1', 'grape', 'foxy', 'degods',
-
-  // Exchanges & DEX tokens
-  'serum', 'srm', 'oxy', 'prism', 'crema', 'aldrin', 'rin',
-
-  // Additional trending searches for comprehensive coverage
-  'pepe', 'doge', 'shib', 'floki', 'kishu', 'elon', 'dogelon',
-  'babydoge', 'akita', 'hokk', 'ass', 'cum', 'pussy', 'tits',
-  'chad', 'wojak', 'npc', 'cope', 'hopium', 'fud', 'ngmi', 'wagmi',
-
-  // More DeFi & yields
-  'tulip', 'jet', 'parrot', 'prt', 'slnd', 'socean', 'scnsol',
-  'larix', 'liq', 'ratio', 'usdr', 'mai', 'usdh', 'cashio',
-
-  // Additional protocols
-  'ninja', 'sail', 'cope', 'maps', 'kin', 'gari', 'prism', 'psy',
-  'basis', 'cash', 'grape', 'sny', 'synthetify', 'bonfida',
-
-  // More meme searches
-  'milady', 'remilio', 'trump', 'biden', 'elon', 'pepe', 'apu',
-  'wojak', 'bobo', 'sminem', 'bogdanoff', 'moon', 'lambo', 'wen',
-
-  // Extended coverage for max tokens
-  'sol', 'solana', 'defi', 'nft', 'dao', 'coin', 'token', 'swap',
-  'farm', 'stake', 'yield', 'pool', 'vault', 'lend', 'borrow',
-  'trade', 'dex', 'amm', 'liquidity', 'finance', 'protocol',
-
-  // Additional specific tokens
-  'samo', 'cope', 'oogi', 'cheems', 'cato', 'solape', 'fida',
-  'rope', 'tulip', 'sunny', 'slim', 'crema', 'aldrin', 'step',
-  'larix', 'port', 'apricot', 'francium', 'quarry', 'jet',
-  'parrot', 'ratio', 'basis', 'cashio', 'uxp', 'slnd', 'socean',
-
-  // Even more coverage
-  'media', 'sntr', 'audio', 'audius', 'maps', 'ninja', 'star',
-  'atlas', 'polis', 'gene', 'aury', 'nyan', 'degen', 'cope',
-  'oxy', 'mnde', 'liq', 'prism', 'psy', 'hxro', 'zo', 'cypher',
-  'zeta', 'drift', 'entropy', '01', 'hedge', 'dual', 'friktion',
-
-  // Final batch for 300 total
-  'vader', 'sushi', 'uni', 'cake', 'joe', 'spell', 'ice', 'time',
-  'ohm', 'klima', 'btrfly', 'inv', 'fxs', 'cvx', 'crv', 'bal',
-  'aave', 'comp', 'mkr', 'snx', 'yfi', 'link', 'band', 'ocean',
-  'grt', 'api3', 'trb', 'cel', 'nexo', 'astr', 'glmr', 'movr',
-  'ftt', 'looks', 'blur', 'x2y2', 'gem', 'sudo', 'nftx', 'treasure'
-];
-
 /**
- * Load existing tokens from previous runs to avoid re-fetching
+ * Load existing token list to avoid re-fetching
  */
 function loadExistingTokens() {
   try {
     if (fs.existsSync('tokens.json')) {
-      const data = fs.readFileSync('tokens.json', 'utf8');
-      const tokenList = JSON.parse(data);
-      return tokenList.tokens || [];
+      const data = JSON.parse(fs.readFileSync('tokens.json', 'utf8'));
+      return data.tokens || [];
     }
   } catch (error) {
-    console.log('⚠️  No existing tokens.json found, starting fresh');
+    console.log('⚠️  Starting fresh - no existing tokens.json');
   }
   return [];
 }
 
 /**
- * Aggressive DexScreener fetching - 300 requests per run
- * Rate limit: 300 requests per 15 minutes = 1 request per 3 seconds
+ * Get set of already known addresses for deduplication
  */
-async function fetchDexScreenerAggressive() {
+function getKnownAddresses(existingTokens) {
+  return new Set(existingTokens.map(t => t.address));
+}
+
+/**
+ * STATIC SOURCE: Solana Labs (fetch once, cache forever)
+ */
+async function fetchSolanaLabs(knownAddresses) {
+  console.log('📥 Fetching Solana Labs token list...');
+
+  try {
+    const data = await fetchJson('https://cdn.jsdelivr.net/gh/solana-labs/token-list@main/src/tokens/solana.tokenlist.json');
+    const tokens = data.tokens || [];
+
+    // Only keep new tokens
+    const newTokens = tokens.filter(t => !knownAddresses.has(t.address));
+
+    console.log(`✅ Solana Labs: ${tokens.length} total, ${newTokens.length} new`);
+    return newTokens;
+  } catch (error) {
+    console.error('❌ Solana Labs error:', error.message);
+    return [];
+  }
+}
+
+/**
+ * STATIC SOURCE: Jupiter Archived List (fetch once)
+ */
+async function fetchJupiterArchived(knownAddresses) {
+  console.log('📥 Fetching Jupiter archived list...');
+
+  try {
+    const data = await fetchJson('https://token.jup.ag/all');
+    const tokens = data || [];
+
+    const newTokens = tokens.filter(t => !knownAddresses.has(t.address));
+
+    console.log(`✅ Jupiter: ${tokens.length} total, ${newTokens.length} new`);
+    return newTokens;
+  } catch (error) {
+    console.error('❌ Jupiter error:', error.message);
+    return [];
+  }
+}
+
+/**
+ * DYNAMIC SOURCE: DexScreener Smart Queries
+ * 100 requests optimized for new token discovery
+ */
+async function fetchDexScreenerSmart(knownAddresses) {
   console.log('');
-  console.log('🔥 AGGRESSIVE DEXSCREENER FETCHING (300 requests)');
+  console.log('🔥 DexScreener Smart Discovery (100 requests)');
   console.log('═══════════════════════════════════════════════');
-  console.log('');
 
   const allTokens = [];
-  const seen = new Set();
-  const totalQueries = Math.min(SEARCH_QUERIES.length, 300); // Cap at 300
-  let requestCount = 0;
+  const hour = new Date().getUTCHours();
+  let queries = [];
 
-  console.log(`📊 Will execute ${totalQueries} search queries`);
-  console.log(`⏱️  Rate limit: 1 request per 3 seconds (safe for 300/15min limit)`);
-  console.log('');
+  // Smart rotation based on time of day
+  if (hour >= 0 && hour < 8) {
+    // Night: Focus on latest pairs & new launches
+    console.log('🌙 Night Mode: Latest pairs + new launches');
+    queries = [
+      'solana', 'new', 'launch', 'latest', 'bonk', 'wif', 'popcat',
+      'meme', 'coin', 'token', 'defi', 'dex', 'pump', 'moon',
+      'pepe', 'doge', 'shib', 'floki', 'wen', 'tremp', 'bome'
+    ];
+  } else if (hour >= 8 && hour < 16) {
+    // Day: Focus on trending & high volume
+    console.log('☀️ Day Mode: Trending + high volume');
+    queries = [
+      'jup', 'pyth', 'jto', 'orca', 'ray', 'mango', 'drift',
+      'trending', 'volume', 'top', 'popular', 'hot', 'trade',
+      'usdc', 'usdt', 'sol', 'btc', 'eth', 'stablecoin'
+    ];
+  } else {
+    // Evening: Deep dive niche & gaming
+    console.log('🌆 Evening Mode: Niche + gaming + NFT');
+    queries = [
+      'atlas', 'polis', 'genopets', 'stepn', 'nft', 'gaming',
+      'metaverse', 'render', 'helium', 'nosana', 'shdw',
+      'dao', 'governance', 'staking', 'yield', 'farm'
+    ];
+  }
+
+  // Add diverse searches to reach 100 total
+  const additionalQueries = [
+    'samo', 'cope', 'foxy', 'grape', 'dust', 'media', 'kin',
+    'msol', 'stsol', 'jsol', 'liquid', 'stake', 'validator',
+    'bridge', 'wormhole', 'portal', 'allbridge', 'cross',
+    'lend', 'borrow', 'loan', 'protocol', 'vault', 'pool',
+    'swap', 'amm', 'orderbook', 'perp', 'derivative', 'option',
+    'real', 'world', 'asset', 'rwa', 'commodity', 'gold',
+    'ai', 'artificial', 'intelligence', 'data', 'oracle',
+    'music', 'art', 'creator', 'social', 'community',
+    'privacy', 'zero', 'knowledge', 'zk', 'rollup',
+    'mobile', 'phone', 'iot', 'device', 'hardware',
+    'energy', 'green', 'carbon', 'climate', 'esg',
+    'insurance', 'predict', 'betting', 'lottery', 'game',
+    'sport', 'fantasy', 'esport', 'streaming', 'video',
+    'launchpad', 'ido', 'ico', 'presale', 'fundraise',
+    'aggregator', 'analytics', 'explorer', 'wallet', 'tool'
+  ];
+
+  queries = [...queries, ...additionalQueries].slice(0, 100);
 
   const startTime = Date.now();
+  let requestCount = 0;
+  let newFound = 0;
 
-  for (let i = 0; i < totalQueries; i++) {
-    const query = SEARCH_QUERIES[i];
+  for (let i = 0; i < queries.length; i++) {
+    const query = queries[i];
 
     try {
-      const progress = Math.round((i / totalQueries) * 100);
-      process.stdout.write(`\r[${progress}%] Query ${i + 1}/${totalQueries}: ${query.padEnd(20)} `);
+      const progress = Math.round((i / queries.length) * 100);
+      process.stdout.write(`\r[${progress}%] ${i + 1}/${queries.length}: ${query.padEnd(20)} (${newFound} new)`);
 
       const data = await fetchJson(`https://api.dexscreener.com/latest/dex/search?q=${query}`);
       requestCount++;
 
       if (data && data.pairs) {
-        // Take top 10 from each search to maximize unique tokens
-        data.pairs.slice(0, 10).forEach(pair => {
+        data.pairs.slice(0, 15).forEach(pair => {
           if (pair.chainId === 'solana' && pair.baseToken) {
             const addr = pair.baseToken.address;
-            if (!seen.has(addr)) {
-              seen.add(addr);
+            if (!knownAddresses.has(addr)) {
+              knownAddresses.add(addr);
+              newFound++;
               allTokens.push({
                 address: addr,
                 symbol: pair.baseToken.symbol || 'UNKNOWN',
@@ -230,44 +243,133 @@ async function fetchDexScreenerAggressive() {
         });
       }
 
-      // Rate limit: 3 seconds per request (safe for 300 requests / 15 minutes)
-      await sleep(3000);
+      // Rate limit: 1.2 seconds per request (safe for 300/15min)
+      await sleep(1200);
 
     } catch (error) {
-      console.error(`\n  ❌ Error on query "${query}":`, error.message);
+      console.error(`\n  ❌ Error on "${query}":`, error.message);
     }
   }
 
   const elapsedTime = ((Date.now() - startTime) / 1000 / 60).toFixed(1);
 
   console.log('');
-  console.log('');
-  console.log(`✅ Completed ${requestCount} DexScreener requests in ${elapsedTime} minutes`);
-  console.log(`📊 Found ${allTokens.length} unique tokens from DexScreener`);
+  console.log(`✅ DexScreener: ${requestCount} requests in ${elapsedTime} min, ${newFound} new tokens`);
   console.log('');
 
   return allTokens;
 }
 
 /**
- * Fetch Solana Labs base list
+ * DYNAMIC SOURCE: CoinGecko Top Solana Tokens
  */
-async function fetchSolanaLabs() {
-  console.log('📥 Fetching Solana Labs token list...');
+async function fetchCoinGecko(knownAddresses) {
+  console.log('📥 Fetching CoinGecko Solana tokens...');
 
   try {
-    const data = await fetchJson('https://cdn.jsdelivr.net/gh/solana-labs/token-list@main/src/tokens/solana.tokenlist.json');
-    const tokens = data.tokens || [];
-    console.log(`✅ Loaded ${tokens.length} tokens from Solana Labs`);
+    // CoinGecko free API: coins/markets endpoint
+    const data = await fetchJson('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&category=solana-ecosystem&order=market_cap_desc&per_page=250&page=1&sparkline=false');
+
+    const tokens = [];
+    data.forEach(coin => {
+      // Try to extract Solana address from platforms
+      const solAddress = coin.platforms?.solana;
+      if (solAddress && !knownAddresses.has(solAddress)) {
+        knownAddresses.add(solAddress);
+        tokens.push({
+          address: solAddress,
+          symbol: coin.symbol?.toUpperCase() || 'UNKNOWN',
+          name: coin.name || 'Unknown',
+          decimals: 9,
+          chainId: 101,
+          logoURI: coin.image
+        });
+      }
+    });
+
+    console.log(`✅ CoinGecko: ${tokens.length} new tokens`);
     return tokens;
   } catch (error) {
-    console.error('❌ Solana Labs error:', error.message);
+    console.error('❌ CoinGecko error:', error.message);
     return [];
   }
 }
 
 /**
- * Normalize token
+ * DYNAMIC SOURCE: Raydium Top Pools
+ */
+async function fetchRaydiumPools(knownAddresses) {
+  console.log('📥 Fetching Raydium pools...');
+
+  try {
+    const data = await fetchJson('https://api.raydium.io/v2/main/pairs');
+
+    const tokens = [];
+    if (Array.isArray(data)) {
+      data.slice(0, 100).forEach(pool => {
+        // Extract base and quote tokens
+        [pool.baseMint, pool.quoteMint].forEach(addr => {
+          if (addr && !knownAddresses.has(addr)) {
+            knownAddresses.add(addr);
+            tokens.push({
+              address: addr,
+              symbol: pool.baseSymbol || pool.quoteSymbol || 'UNKNOWN',
+              name: pool.name || 'Unknown',
+              decimals: 9,
+              chainId: 101,
+              logoURI: null
+            });
+          }
+        });
+      });
+    }
+
+    console.log(`✅ Raydium: ${tokens.length} new tokens`);
+    return tokens;
+  } catch (error) {
+    console.error('❌ Raydium error:', error.message);
+    return [];
+  }
+}
+
+/**
+ * DYNAMIC SOURCE: Orca Whirlpools
+ */
+async function fetchOrcaPools(knownAddresses) {
+  console.log('📥 Fetching Orca whirlpools...');
+
+  try {
+    const data = await fetchJson('https://api.mainnet.orca.so/v1/whirlpool/list');
+
+    const tokens = [];
+    if (data && data.whirlpools) {
+      data.whirlpools.slice(0, 50).forEach(pool => {
+        [pool.tokenA, pool.tokenB].forEach(token => {
+          if (token && token.mint && !knownAddresses.has(token.mint)) {
+            knownAddresses.add(token.mint);
+            tokens.push({
+              address: token.mint,
+              symbol: token.symbol || 'UNKNOWN',
+              name: token.name || 'Unknown',
+              decimals: token.decimals || 9,
+              chainId: 101,
+              logoURI: token.logoURI
+            });
+          }
+        });
+      });
+    }
+
+    console.log(`✅ Orca: ${tokens.length} new tokens`);
+    return tokens;
+  } catch (error) {
+    console.error('❌ Orca error:', error.message);
+    return [];
+  }
+}
+
+/**
+ * Normalize token format
  */
 function normalizeToken(token) {
   return {
@@ -295,19 +397,19 @@ function filterWrappedSOL(tokens) {
 }
 
 /**
- * Deduplicate by address
+ * Deduplicate by address with priority
  */
 function deduplicateTokens(tokens) {
   const addressMap = new Map();
 
-  // First: popular tokens get priority
+  // Priority 1: Popular tokens
   tokens.forEach(token => {
     if (POPULAR_TOKENS.includes(token.address)) {
       addressMap.set(token.address, token);
     }
   });
 
-  // Second: remaining tokens
+  // Priority 2: All other tokens
   tokens.forEach(token => {
     if (!addressMap.has(token.address)) {
       addressMap.set(token.address, token);
@@ -318,44 +420,83 @@ function deduplicateTokens(tokens) {
 }
 
 /**
- * MAIN
+ * MAIN ORCHESTRATOR
  */
 async function buildMegaTokenList() {
   console.log('');
-  console.log('🚀 MEGA TOKEN LIST BUILDER v3');
-  console.log('🔥 AGGRESSIVE MODE: 300 DexScreener requests per run');
+  console.log('🚀 MEGA TOKEN LIST BUILDER v4 - ULTIMATE EDITION');
+  console.log('📊 Multi-Source Discovery Engine');
   console.log('═══════════════════════════════════════════════');
   console.log('');
 
-  const allTokens = [];
   const stats = {};
+  const allTokens = [];
 
-  // Step 1: Solana Labs base (~13k tokens)
-  const solanaTokens = await fetchSolanaLabs();
-  stats.solanaLabs = solanaTokens.length;
-  solanaTokens.forEach(t => allTokens.push(normalizeToken(t)));
+  // Load existing tokens for incremental discovery
+  const existingTokens = loadExistingTokens();
+  const knownAddresses = getKnownAddresses(existingTokens);
 
+  console.log(`📚 Loaded ${existingTokens.length.toLocaleString()} existing tokens`);
   console.log('');
 
-  // Step 2: Aggressive DexScreener fetching (300 requests)
-  const dexTokens = await fetchDexScreenerAggressive();
+  // PHASE 1: Static sources (only fetch if we have < 10k tokens)
+  if (existingTokens.length < 10000) {
+    console.log('📦 PHASE 1: Static Sources');
+    console.log('─────────────────────────────────────────────');
+
+    const solanaTokens = await fetchSolanaLabs(knownAddresses);
+    stats.solanaLabs = solanaTokens.length;
+    solanaTokens.forEach(t => allTokens.push(normalizeToken(t)));
+
+    const jupiterTokens = await fetchJupiterArchived(knownAddresses);
+    stats.jupiter = jupiterTokens.length;
+    jupiterTokens.forEach(t => allTokens.push(normalizeToken(t)));
+
+    console.log('');
+  } else {
+    console.log('✅ Skipping static sources (already loaded)');
+    console.log('');
+    stats.solanaLabs = 0;
+    stats.jupiter = 0;
+  }
+
+  // PHASE 2: Dynamic sources (always fetch for new tokens)
+  console.log('🔥 PHASE 2: Dynamic Discovery');
+  console.log('─────────────────────────────────────────────');
+
+  const dexTokens = await fetchDexScreenerSmart(knownAddresses);
   stats.dexScreener = dexTokens.length;
   dexTokens.forEach(t => allTokens.push(normalizeToken(t)));
 
+  const coinGeckoTokens = await fetchCoinGecko(knownAddresses);
+  stats.coinGecko = coinGeckoTokens.length;
+  coinGeckoTokens.forEach(t => allTokens.push(normalizeToken(t)));
+
+  const raydiumTokens = await fetchRaydiumPools(knownAddresses);
+  stats.raydium = raydiumTokens.length;
+  raydiumTokens.forEach(t => allTokens.push(normalizeToken(t)));
+
+  const orcaTokens = await fetchOrcaPools(knownAddresses);
+  stats.orca = orcaTokens.length;
+  orcaTokens.forEach(t => allTokens.push(normalizeToken(t)));
+
   console.log('');
-  console.log('📊 PROCESSING & DEDUPLICATION');
+  console.log('📊 PROCESSING & MERGING');
   console.log('═══════════════════════════════════════════════');
-  console.log(`   Fetched:  ${allTokens.length.toLocaleString()} total tokens`);
+
+  // Merge with existing tokens
+  const combined = [...existingTokens, ...allTokens];
+  console.log(`   Combined:  ${combined.length.toLocaleString()} total tokens`);
 
   // Filter wrapped SOL
-  const filtered = filterWrappedSOL(allTokens);
-  console.log(`   Filtered: ${filtered.length.toLocaleString()} (removed ${allTokens.length - filtered.length} wrapped SOL)`);
+  const filtered = filterWrappedSOL(combined);
+  console.log(`   Filtered:  ${filtered.length.toLocaleString()} (removed ${combined.length - filtered.length} wrapped SOL)`);
 
   // Deduplicate
   const unique = deduplicateTokens(filtered);
-  console.log(`   Unique:   ${unique.length.toLocaleString()} (removed ${filtered.length - unique.length} duplicates)`);
+  console.log(`   Unique:    ${unique.length.toLocaleString()} (removed ${filtered.length - unique.length} duplicates)`);
 
-  // Sort: popular tokens first, then by volume/liquidity
+  // Sort: popular first, then by volume
   const sorted = unique.sort((a, b) => {
     const aIsPopular = POPULAR_TOKENS.includes(a.address);
     const bIsPopular = POPULAR_TOKENS.includes(b.address);
@@ -366,25 +507,41 @@ async function buildMegaTokenList() {
       return POPULAR_TOKENS.indexOf(a.address) - POPULAR_TOKENS.indexOf(b.address);
     }
 
-    // Sort by volume if available
     const aVol = a.volume24h || 0;
     const bVol = b.volume24h || 0;
     return bVol - aVol;
   });
 
-  console.log(`   Sorted:   Top 50 popular tokens prioritized`);
+  console.log(`   Sorted:    Top 50 popular tokens prioritized`);
+
+  // Calculate discovery stats
+  const newTokensAdded = sorted.length - existingTokens.length;
+  const discoveryRate = allTokens.length > 0 ? ((newTokensAdded / allTokens.length) * 100).toFixed(1) : 0;
+
+  console.log('');
+  console.log('📈 DISCOVERY METRICS');
+  console.log('═══════════════════════════════════════════════');
+  console.log(`   Previous:        ${existingTokens.length.toLocaleString()} tokens`);
+  console.log(`   New discovered:  ${newTokensAdded.toLocaleString()} tokens`);
+  console.log(`   Discovery rate:  ${discoveryRate}%`);
+  console.log(`   Total now:       ${sorted.length.toLocaleString()} tokens`);
 
   // Build final list
   const tokenList = {
     name: 'Tenet Wallet - MEGA Token List',
-    description: 'Solana Labs + DexScreener (300 requests/day) - Growing daily',
+    description: 'Multi-source: Solana Labs + Jupiter + DexScreener + CoinGecko + Raydium + Orca',
     timestamp: new Date().toISOString(),
     version: {
-      major: 3,
+      major: 4,
       minor: 0,
       patch: Date.now()
     },
-    stats: stats,
+    stats: {
+      ...stats,
+      total: sorted.length,
+      newThisRun: newTokensAdded,
+      discoveryRate: parseFloat(discoveryRate)
+    },
     tokens: sorted,
     count: sorted.length
   };
@@ -399,11 +556,15 @@ async function buildMegaTokenList() {
   console.log(`📊 Tokens: ${tokenList.count.toLocaleString()}`);
   console.log(`📦 Size:   ${(Buffer.byteLength(JSON.stringify(tokenList)) / 1024 / 1024).toFixed(2)} MB`);
   console.log('');
-  console.log('📈 Sources:');
-  console.log(`   Solana Labs:  ${stats.solanaLabs.toLocaleString()}`);
-  console.log(`   DexScreener:  ${stats.dexScreener.toLocaleString()}`);
+  console.log('📈 Sources This Run:');
+  console.log(`   Solana Labs:  ${stats.solanaLabs?.toLocaleString() || 0}`);
+  console.log(`   Jupiter:      ${stats.jupiter?.toLocaleString() || 0}`);
+  console.log(`   DexScreener:  ${stats.dexScreener?.toLocaleString() || 0}`);
+  console.log(`   CoinGecko:    ${stats.coinGecko?.toLocaleString() || 0}`);
+  console.log(`   Raydium:      ${stats.raydium?.toLocaleString() || 0}`);
+  console.log(`   Orca:         ${stats.orca?.toLocaleString() || 0}`);
   console.log('');
-  console.log('💡 This list grows by ~300 unique tokens per day!');
+  console.log('💡 Running every 2 hours = 12x/day for continuous discovery!');
   console.log('');
 
   return tokenList;
@@ -418,5 +579,6 @@ buildMegaTokenList()
   .catch((error) => {
     console.error('');
     console.error('❌ FATAL:', error);
+    console.error(error.stack);
     process.exit(1);
   });
