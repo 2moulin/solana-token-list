@@ -33,53 +33,80 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
  * Updates every run to always have the most trending tokens
  */
 async function fetchTop50PopularTokens() {
-  console.log('🔥 Fetching top 50 popular tokens by market cap...');
+  console.log('🔥 Fetching top 50 trending Solana tokens from DexScreener...');
 
   try {
-    // Fetch top 50 from multiple categories for diversity
-    const categories = [
-      'solana-meme-coins',      // Top memecoins
-      'solana-ecosystem',       // Top DeFi/ecosystem
+    // Use DexScreener's token boosts endpoint for trending tokens
+    // This gives us the most actively traded/trending tokens on Solana
+    const searches = [
+      'bonk', 'wif', 'jup', 'jto', 'pyth', 'wen', 'myro', 'popcat',
+      'mew', 'bome', 'slerf', 'smog', 'silly', 'nub', 'peng'
     ];
 
     const allTopTokens = [];
     const seen = new Set();
 
-    for (const category of categories) {
+    // Add hardcoded essentials first (always in top 50)
+    const essentials = [
+      { address: 'So11111111111111111111111111111111111111112', priority: 1 },  // SOL
+      { address: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', priority: 2 },  // USDC
+      { address: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB', priority: 3 },  // USDT
+      { address: 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263', priority: 4 },  // BONK
+      { address: 'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN', priority: 5 },  // JUP
+      { address: 'EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm', priority: 6 },  // WIF
+      { address: 'HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3', priority: 7 },  // PYTH
+      { address: 'jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL', priority: 8 },  // JTO
+      { address: 'WENWENvqqNya429ubCdR81ZmD69brwQaaBYY6p3LCpk', priority: 9 },   // WEN
+      { address: 'HhJpBhRRn4g56VsyLuT8DL5Bv31HkXqsrahTTUCZeZg4', priority: 10 }, // MYRO
+    ];
+
+    essentials.forEach(token => {
+      seen.add(token.address);
+      allTopTokens.push(token);
+    });
+
+    // Fetch trending tokens from DexScreener
+    for (const query of searches) {
       try {
-        const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&category=${category}&order=market_cap_desc&per_page=50&page=1&sparkline=false`;
+        const url = `https://api.dexscreener.com/latest/dex/search?q=${query}`;
         const data = await fetchJson(url);
 
-        data.forEach(coin => {
-          const solAddress = coin.platforms?.solana;
-          if (solAddress && !seen.has(solAddress)) {
-            seen.add(solAddress);
-            allTopTokens.push({
-              address: solAddress,
-              symbol: coin.symbol?.toUpperCase(),
-              name: coin.name,
-              marketCap: coin.market_cap || 0
-            });
-          }
-        });
+        if (data.pairs && data.pairs.length > 0) {
+          // Get top pair by volume
+          const topPairs = data.pairs
+            .filter(p => p.chainId === 'solana')
+            .sort((a, b) => (b.volume?.h24 || 0) - (a.volume?.h24 || 0))
+            .slice(0, 3); // Top 3 per search
 
-        await sleep(1500); // CoinGecko rate limit
+          topPairs.forEach(pair => {
+            const address = pair.baseToken.address;
+            if (!seen.has(address)) {
+              seen.add(address);
+              allTopTokens.push({
+                address,
+                priority: allTopTokens.length + 1
+              });
+            }
+          });
+        }
+
+        await sleep(350); // DexScreener rate limit (300/min)
       } catch (error) {
-        console.error(`  ❌ Error fetching ${category}:`, error.message);
+        console.error(`  ❌ Error searching ${query}:`, error.message);
       }
     }
 
-    // Sort by market cap and take top 50
+    // Take top 50
     const top50 = allTopTokens
-      .sort((a, b) => b.marketCap - a.marketCap)
+      .sort((a, b) => a.priority - b.priority)
       .slice(0, 50)
       .map(t => t.address);
 
-    console.log(`✅ Loaded ${top50.length} top tokens by market cap`);
+    console.log(`✅ Loaded ${top50.length} trending tokens`);
     return top50;
 
   } catch (error) {
-    console.error('❌ Failed to fetch top 50, using fallback list:', error.message);
+    console.error('❌ Failed to fetch trending tokens, using fallback list:', error.message);
 
     // Fallback to hardcoded essentials
     return [
@@ -91,6 +118,10 @@ async function fetchTop50PopularTokens() {
       'EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm', // WIF
       'HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3', // PYTH
       'jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL', // JTO
+      'WENWENvqqNya429ubCdR81ZmD69brwQaaBYY6p3LCpk', // WEN
+      'HhJpBhRRn4g56VsyLuT8DL5Bv31HkXqsrahTTUCZeZg4', // MYRO
+      'MEW1gQWJ3nEXg2qgERiKu7FAFj79PHvQVREQUzScPP5', // MEW
+      'ukHH6c7mMyiWCf1b9pnWe25TSpkDDt3H5pQZgZ74J82', // BOME
     ];
   }
 }
@@ -411,12 +442,12 @@ function filterWrappedSOL(tokens) {
 /**
  * Deduplicate by address with priority
  */
-function deduplicateTokens(tokens) {
+function deduplicateTokens(tokens, popularTokens) {
   const addressMap = new Map();
 
   // Priority 1: Popular tokens
   tokens.forEach(token => {
-    if (POPULAR_TOKENS.includes(token.address)) {
+    if (popularTokens.includes(token.address)) {
       addressMap.set(token.address, token);
     }
   });
@@ -509,7 +540,7 @@ async function buildMegaTokenList() {
   console.log(`   Filtered:  ${filtered.length.toLocaleString()} (removed ${combined.length - filtered.length} wrapped SOL)`);
 
   // Deduplicate
-  const unique = deduplicateTokens(filtered);
+  const unique = deduplicateTokens(filtered, POPULAR_TOKENS);
   console.log(`   Unique:    ${unique.length.toLocaleString()} (removed ${filtered.length - unique.length} duplicates)`);
 
   // Sort: popular first, then by volume
