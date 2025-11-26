@@ -3,7 +3,7 @@ name: Update Token List
 on:
   # Run every 2 hours = 12 times per day for maximum token discovery
   schedule:
-    - cron: '0 */2 * * *'
+    - cron: '*/30 * * * *'
 
   # Allow manual trigger
   workflow_dispatch:
