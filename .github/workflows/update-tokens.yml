@@ -1,7 +1,7 @@
 name: Update Token List
 
 on:
-  # Run every 2 hours = 12 times per day for maximum token discovery
+  # Run every 30 minutes = 48 times per day for maximum token discovery
   schedule:
     - cron: '*/30 * * * *'
 
