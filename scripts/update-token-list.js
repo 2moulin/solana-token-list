@@ -30,11 +30,11 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
  * Fetch top 50 popular tokens dynamically from DexScreener
- * Only updates once per day (midnight UTC) to save requests
+ * Updates 3x per day (8h, 12h, 20h UTC) for maximum freshness
  */
 async function fetchTop50PopularTokens(forceRefresh = false) {
   const currentHour = new Date().getUTCHours();
-  const shouldRefresh = forceRefresh || (currentHour >= 0 && currentHour < 2);
+  const shouldRefresh = forceRefresh || (currentHour === 8 || currentHour === 12 || currentHour === 20);
 
   // If not refresh time, load from existing tokens.json
   if (!shouldRefresh) {
@@ -43,7 +43,7 @@ async function fetchTop50PopularTokens(forceRefresh = false) {
         const data = JSON.parse(fs.readFileSync('tokens.json', 'utf8'));
         if (data.popularTokens && data.popularTokens.length > 0) {
           console.log(`⚡ Using cached trending tokens (${data.popularTokens.length} tokens)`);
-          console.log('   Next trending refresh: midnight UTC (0h-2h)');
+          console.log('   Next trending refresh: 8h, 12h, or 20h UTC');
           return data.popularTokens;
         }
       }
@@ -210,12 +210,12 @@ async function fetchJupiterArchived(knownAddresses) {
 
 /**
  * DYNAMIC SOURCE: DexScreener Smart Queries
- * 100 requests optimized for new token discovery
+ * 300 requests optimized for MAXIMUM token discovery
  */
 async function fetchDexScreenerSmart(knownAddresses) {
   console.log('');
-  console.log('🔥 DexScreener Smart Discovery (100 requests)');
-  console.log('═══════════════════════════════════════════════');
+  console.log('🔥 DexScreener Smart Discovery (300 requests - MAXIMUM MODE)');
+  console.log('═══════════════════════════════════════════════════════════════');
 
   const allTokens = [];
   const hour = new Date().getUTCHours();
@@ -248,26 +248,93 @@ async function fetchDexScreenerSmart(knownAddresses) {
     ];
   }
 
-  // Add diverse searches to reach 100 total
+  // Add diverse searches to reach 300 total (MAXIMUM COVERAGE)
   const additionalQueries = [
+    // Core DeFi & Infrastructure
     'samo', 'cope', 'foxy', 'grape', 'dust', 'media', 'kin',
     'msol', 'stsol', 'jsol', 'liquid', 'stake', 'validator',
     'bridge', 'wormhole', 'portal', 'allbridge', 'cross',
     'lend', 'borrow', 'loan', 'protocol', 'vault', 'pool',
     'swap', 'amm', 'orderbook', 'perp', 'derivative', 'option',
     'real', 'world', 'asset', 'rwa', 'commodity', 'gold',
+
+    // AI & Data
     'ai', 'artificial', 'intelligence', 'data', 'oracle',
+    'machine', 'learning', 'neural', 'model', 'compute',
+    'cloud', 'storage', 'ipfs', 'arweave', 'filecoin',
+
+    // Social & Creative
     'music', 'art', 'creator', 'social', 'community',
+    'fan', 'ticket', 'event', 'merchandise', 'collectible',
+    'digital', 'identity', 'profile', 'reputation', 'badge',
+
+    // Privacy & Security
     'privacy', 'zero', 'knowledge', 'zk', 'rollup',
+    'encryption', 'secure', 'anonymous', 'private', 'stealth',
+
+    // Mobile & IoT
     'mobile', 'phone', 'iot', 'device', 'hardware',
+    'sensor', 'network', 'mesh', 'wireless', 'bluetooth',
+
+    // Sustainability
     'energy', 'green', 'carbon', 'climate', 'esg',
+    'renewable', 'solar', 'wind', 'sustainable', 'eco',
+
+    // Gaming & Entertainment (EXPANDED)
     'insurance', 'predict', 'betting', 'lottery', 'game',
     'sport', 'fantasy', 'esport', 'streaming', 'video',
+    'play', 'earn', 'reward', 'quest', 'battle',
+    'racing', 'card', 'rpg', 'strategy', 'puzzle',
+    'arcade', 'casual', 'adventure', 'shooter', 'sandbox',
+
+    // Launchpads & Fundraising
     'launchpad', 'ido', 'ico', 'presale', 'fundraise',
-    'aggregator', 'analytics', 'explorer', 'wallet', 'tool'
+    'crowdfund', 'seed', 'round', 'investor', 'venture',
+
+    // Tools & Analytics
+    'aggregator', 'analytics', 'explorer', 'wallet', 'tool',
+    'dashboard', 'monitor', 'tracker', 'scanner', 'alert',
+
+    // Memecoins (EXPANDED for maximum discovery)
+    'cat', 'dog', 'frog', 'penguin', 'monkey', 'ape',
+    'bear', 'bull', 'wolf', 'shark', 'whale', 'fish',
+    'bird', 'dragon', 'tiger', 'lion', 'panda', 'koala',
+    'hamster', 'rabbit', 'fox', 'raccoon', 'squirrel', 'hedgehog',
+
+    // Numbers & Symbols (often used in token names)
+    '100x', '1000x', 'moon', 'mars', 'rocket', 'gem',
+    'diamond', 'gold', 'silver', 'platinum', 'rare', 'legendary',
+
+    // Trending Keywords
+    'viral', 'hype', 'fomo', 'hodl', 'degen', 'alpha',
+    'beta', 'gamma', 'sigma', 'omega', 'ultra', 'mega',
+    'super', 'hyper', 'max', 'pro', 'elite', 'premium',
+
+    // DeFi Protocols (specific names)
+    'marinade', 'lido', 'jupiter', 'raydium', 'orca', 'lifinity',
+    'phoenix', 'zeta', 'mango', 'drift', 'marginfi', 'solend',
+    'port', 'francium', 'tulip', 'sunny', 'saber', 'mercurial',
+
+    // Regional/Language
+    'japan', 'korea', 'china', 'asia', 'europe', 'america',
+    'latin', 'africa', 'middle', 'east', 'global', 'world',
+
+    // Finance Terms
+    'fund', 'index', 'etf', 'yield', 'apy', 'apr',
+    'leverage', 'margin', 'collateral', 'debt', 'credit', 'equity',
+
+    // Tech & Innovation
+    'quantum', 'blockchain', 'web3', 'metaverse', 'virtual',
+    'augmented', 'reality', 'vr', 'ar', 'xr', '3d',
+
+    // Random high-potential keywords
+    'banana', 'pizza', 'sushi', 'burger', 'coffee', 'beer',
+    'wine', 'water', 'fire', 'ice', 'lightning', 'thunder',
+    'storm', 'wave', 'ocean', 'mountain', 'forest', 'desert',
+    'space', 'star', 'galaxy', 'planet', 'comet', 'asteroid'
   ];
 
-  queries = [...queries, ...additionalQueries].slice(0, 100);
+  queries = [...queries, ...additionalQueries].slice(0, 300);
 
   const startTime = Date.now();
   let requestCount = 0;
@@ -305,8 +372,8 @@ async function fetchDexScreenerSmart(knownAddresses) {
         });
       }
 
-      // Rate limit: 1.2 seconds per request (safe for 300/15min)
-      await sleep(1200);
+      // Rate limit: 250ms per request = 240 requests/min (safe under 300/min limit)
+      await sleep(250);
 
     } catch (error) {
       console.error(`\n  ❌ Error on "${query}":`, error.message);
