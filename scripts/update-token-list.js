@@ -29,10 +29,29 @@ function fetchJson(url) {
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
- * Fetch top 50 popular tokens dynamically from CoinGecko by market cap
- * Updates every run to always have the most trending tokens
+ * Fetch top 50 popular tokens dynamically from DexScreener
+ * Only updates once per day (midnight UTC) to save requests
  */
-async function fetchTop50PopularTokens() {
+async function fetchTop50PopularTokens(forceRefresh = false) {
+  const currentHour = new Date().getUTCHours();
+  const shouldRefresh = forceRefresh || (currentHour >= 0 && currentHour < 2);
+
+  // If not refresh time, load from existing tokens.json
+  if (!shouldRefresh) {
+    try {
+      if (fs.existsSync('tokens.json')) {
+        const data = JSON.parse(fs.readFileSync('tokens.json', 'utf8'));
+        if (data.popularTokens && data.popularTokens.length > 0) {
+          console.log(`⚡ Using cached trending tokens (${data.popularTokens.length} tokens)`);
+          console.log('   Next trending refresh: midnight UTC (0h-2h)');
+          return data.popularTokens;
+        }
+      }
+    } catch (error) {
+      console.log('⚠️  Failed to load cached trending tokens, fetching fresh...');
+    }
+  }
+
   console.log('🔥 Fetching top 50 trending Solana tokens from DexScreener...');
 
   try {
