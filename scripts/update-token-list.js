@@ -102,6 +102,22 @@ async function fetchTop50PopularTokens(forceRefresh = false) {
       'MEW1gQWJ3nEXg2qgERiKu7FAFj79PHvQVREQUzScPP5',
       'ukHH6c7mMyiWCf1b9pnWe25TSpkDDt3H5pQZgZ74J82',
     ];
+  } catch (error) {
+    console.error('❌ Failed to fetch trending tokens, using fallback list:', error.message);
+    return [
+      'So11111111111111111111111111111111111111112',
+      'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+      'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
+      'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263',
+      'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN',
+      'EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm',
+      'HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3',
+      'jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL',
+      'WENWENvqqNya429ubCdR81ZmD69brwQaaBYY6p3LCpk',
+      'HhJpBhRRn4g56VsyLuT8DL5Bv31HkXqsrahTTUCZeZg4',
+      'MEW1gQWJ3nEXg2qgERiKu7FAFj79PHvQVREQUzScPP5',
+      'ukHH6c7mMyiWCf1b9pnWe25TSpkDDt3H5pQZgZ74J82',
+    ];
   }
 }
 function loadExistingTokens() {
