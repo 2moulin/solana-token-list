@@ -26,16 +26,16 @@ async function fetchTop50PopularTokens(forceRefresh = false) {
       if (fs.existsSync('tokens.json')) {
         const data = JSON.parse(fs.readFileSync('tokens.json', 'utf8'));
         if (data.popularTokens && data.popularTokens.length > 0) {
-          console.log(`⚡ Using cached trending tokens (${data.popularTokens.length} tokens)`);
-          console.log('   Next trending refresh: 8h, 12h, or 20h UTC');
+          console.log(`Using cached trending tokens (${data.popularTokens.length} tokens)`);
+          console.log(' Next trending refresh: 8h, 12h, or 20h UTC');
           return data.popularTokens;
         }
       }
     } catch (error) {
-      console.log('⚠️  Failed to load cached trending tokens, fetching fresh...');
+      console.log('Failed to load cached trending tokens, fetching fresh...');
     }
   }
-  console.log('🔥 Fetching top 50 trending Solana tokens from DexScreener...');
+  console.log('Fetching top 50 trending Solana tokens from DexScreener...');
   try {
     const searches = [
       'bonk', 'wif', 'jup', 'jto', 'pyth', 'wen', 'myro', 'popcat',
@@ -44,16 +44,16 @@ async function fetchTop50PopularTokens(forceRefresh = false) {
     const allTopTokens = [];
     const seen = new Set();
     const essentials = [
-      { address: 'So11111111111111111111111111111111111111112', priority: 1 },  // SOL
-      { address: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', priority: 2 },  // USDC
-      { address: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB', priority: 3 },  // USDT
-      { address: 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263', priority: 4 },  // BONK
-      { address: 'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN', priority: 5 },  // JUP
-      { address: 'EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm', priority: 6 },  // WIF
-      { address: 'HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3', priority: 7 },  // PYTH
-      { address: 'jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL', priority: 8 },  // JTO
-      { address: 'WENWENvqqNya429ubCdR81ZmD69brwQaaBYY6p3LCpk', priority: 9 },   // WEN
-      { address: 'HhJpBhRRn4g56VsyLuT8DL5Bv31HkXqsrahTTUCZeZg4', priority: 10 }, // MYRO
+      { address: 'So11111111111111111111111111111111111111112', priority: 1 },
+      { address: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', priority: 2 },
+      { address: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB', priority: 3 },
+      { address: 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263', priority: 4 },
+      { address: 'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN', priority: 5 },
+      { address: 'EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm', priority: 6 },
+      { address: 'HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3', priority: 7 },
+      { address: 'jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL', priority: 8 },
+      { address: 'WENWENvqqNya429ubCdR81ZmD69brwQaaBYY6p3LCpk', priority: 9 },
+      { address: 'HhJpBhRRn4g56VsyLuT8DL5Bv31HkXqsrahTTUCZeZg4', priority: 10 },
     ];
     essentials.forEach(token => {
       seen.add(token.address);
@@ -81,7 +81,7 @@ async function fetchTop50PopularTokens(forceRefresh = false) {
         }
         await sleep(350);
       } catch (error) {
-        console.error(`  ❌ Error searching ${query}:`, error.message);
+        console.error(`Error searching ${query}:`, error.message);
       }
     }
     const top50 = allTopTokens
@@ -246,7 +246,6 @@ async function fetchDexScreenerSmart(knownAddresses) {
     try {
       const progress = Math.round((i / queries.length) * 100);
       process.stdout.write(`\r[${progress}%] ${i + 1}/${queries.length}: ${query.padEnd(20)} (${newFound} new)`);
-
       const data = await fetchJson(`https://api.dexscreener.com/latest/dex/search?q=${query}`);
       requestCount++;
       if (data && data.pairs) {
