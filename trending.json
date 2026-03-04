@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-04T06:07:30.490Z",
+  "updatedAt": "2026-03-04T06:16:44.958Z",
   "tokens": [
     {
       "symbol": "SOL",
@@ -11,6 +11,105 @@
       "image": "",
       "address": "So11111111111111111111111111111111111111112",
       "pairAddress": "3fkdUeRvUnSKKYgTyX1hkiJmJVbiYtDwyBwxYW19n28t"
+    },
+    {
+      "symbol": "TRUMP",
+      "name": "MAGA (magamemecoin.com)",
+      "price": 2.79,
+      "change24h": 0,
+      "volume24h": 7.99,
+      "marketCap": 123183921,
+      "image": "",
+      "address": "5sNU6g1qVji5dEBnb6SWSX2Gu2rtDvvk7khKyujj6cuU",
+      "pairAddress": "EXuuNT42v3S7p7T8W7knEgRtCcDvcUtxdUXnknpnHA3p"
+    },
+    {
+      "symbol": "POPCAT",
+      "name": "Popcat (SOL)",
+      "price": 0.6179,
+      "change24h": -0.04,
+      "volume24h": 7.99,
+      "marketCap": 605590361,
+      "image": "",
+      "address": "Cpnm1fZUjm48M54Gaae2kwQfMgHX9NZHozhyVb55rfyD",
+      "pairAddress": "EbYMiGkh36mcQ6sHDdizW96Qd3CsM9GTw8kSbA4fPvhv"
+    },
+    {
+      "symbol": "PYTH",
+      "name": "Pyth Network",
+      "price": 0.2029,
+      "change24h": -0.02,
+      "volume24h": 7.99,
+      "marketCap": 2029611644,
+      "image": "",
+      "address": "DFf5TTfDnX8MB28WKvZxnMfiDNaVAS3sjagHg6Bb1ayW",
+      "pairAddress": "B8tGEgWMn7PPomu9ApmGgACfHtw5yRDdoeXn1vi7A3d3"
+    },
+    {
+      "symbol": "RENDER",
+      "name": "Render",
+      "price": 8.11,
+      "change24h": 0,
+      "volume24h": 5.99,
+      "marketCap": 5224720211,
+      "image": "",
+      "address": "3LKnDbJVX6GQMQyFY69UnXXWU4YJ8AbquiDd3Zw8DBHa",
+      "pairAddress": "4mj1Qx2mjWJHzY19snZrJfpn1BYnhcyz3SZSsBQG9MJe"
+    },
+    {
+      "symbol": "BONK",
+      "name": "Bonk",
+      "price": 0.00002781,
+      "change24h": -0.02,
+      "volume24h": 3.99,
+      "marketCap": 250356014,
+      "image": "",
+      "address": "56Lc5By6bBmewoLZLy2QWs9L9nd8aQHFZrYCSaX5KDCm",
+      "pairAddress": "8yrz49cncgqoCCKfi4fmH9h6sFy3ikjrm2DiDMaJf5xw"
+    },
+    {
+      "symbol": "WIF",
+      "name": "dogwifhat",
+      "price": 1.014,
+      "change24h": -0.02,
+      "volume24h": 3.99,
+      "marketCap": 1013256144,
+      "image": "",
+      "address": "4nKiBzUscGCKkEpz1Jz8upgbaRySigVF94FcDZ6RN5u5",
+      "pairAddress": "AhnSokYSRhBQCGkvidA2WqczjUbcHq1PqapuA1PPjLQ8"
+    },
+    {
+      "symbol": "JUP",
+      "name": "Jupiter",
+      "price": 0.8006,
+      "change24h": 0,
+      "volume24h": 3.99,
+      "marketCap": 8006022814,
+      "image": "",
+      "address": "Egtoetiw3pKRNSzwgXZRWgMCbUSZmb2qPVwP2w8BoAzw",
+      "pairAddress": "CAfkBm4ZW8SB9vbvX8GNNZRo6obF4FEz7Vd3xKiQiE5k"
+    },
+    {
+      "symbol": "PENGU",
+      "name": "Pudgy Penguins",
+      "price": 0.03869,
+      "change24h": -0.02,
+      "volume24h": 3.99,
+      "marketCap": 2432553219,
+      "image": "",
+      "address": "9Qq3cwZkScM2TUXLHaMWJHxaJYaPEeG1uP1UmuFCCh7R",
+      "pairAddress": "51eNU1Xn9Qu5C86iC8aM1PUSyLZ1huQpd5cWFeoo8CcA"
+    },
+    {
+      "symbol": "RAY",
+      "name": "Raydium✅",
+      "price": 3.59,
+      "change24h": -0.02,
+      "volume24h": 3.99,
+      "marketCap": 1046776551,
+      "image": "",
+      "address": "6EACtpDaVsmPz78pSHrHSwgtUrTmgJ1WZ5KCdfA137MF",
+      "pairAddress": "3HGw2S9GwGhbWQ7r7LhDxNMhweCnsp1kBbvzjBUuGvTN"
     }
   ]
 }

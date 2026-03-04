@@ -87,11 +87,14 @@ async function main() {
       try {
         const raw = await fetch(`https://api.dexscreener.com/latest/dex/search?q=${query}`);
         const data = JSON.parse(raw);
-        const match = (data.pairs || []).find(p =>
-          p.chainId === 'solana' &&
-          p.baseToken.symbol.toUpperCase() === query &&
-          (p.liquidity?.usd || 0) >= 50000
-        );
+        const candidates = (data.pairs || [])
+          .filter(p =>
+            p.chainId === 'solana' &&
+            p.baseToken.symbol.toUpperCase() === query &&
+            (p.liquidity?.usd || 0) >= 50000
+          )
+          .sort((a, b) => (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0));
+        const match = candidates[0];
         if (!match) continue;
         const sym = match.baseToken.symbol.toUpperCase();
         if (seen.has(sym)) continue;
