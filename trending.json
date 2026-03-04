@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-04T09:45:50.923Z",
+  "updatedAt": "2026-03-04T10:21:12.095Z",
   "tokens": [
     {
       "symbol": "SOL",
@@ -44,17 +44,6 @@
       "image": "",
       "address": "3LKnDbJVX6GQMQyFY69UnXXWU4YJ8AbquiDd3Zw8DBHa",
       "pairAddress": "4mj1Qx2mjWJHzY19snZrJfpn1BYnhcyz3SZSsBQG9MJe"
-    },
-    {
-      "symbol": "PYTH",
-      "name": "Pyth Network",
-      "price": 0.2029,
-      "change24h": -0.02,
-      "volume24h": 7.99,
-      "marketCap": 2029611644,
-      "image": "",
-      "address": "DFf5TTfDnX8MB28WKvZxnMfiDNaVAS3sjagHg6Bb1ayW",
-      "pairAddress": "B8tGEgWMn7PPomu9ApmGgACfHtw5yRDdoeXn1vi7A3d3"
     },
     {
       "symbol": "BONK",
@@ -110,6 +99,17 @@
       "image": "",
       "address": "8k3vk24p8X9LMWQE8CouLtLryUoC5p7Emh2Xd7wwQnWa",
       "pairAddress": "6QWZAqbsyg1EwndUkFaJhvNp1jJgrSTUyVBQB6yDWAyX"
+    },
+    {
+      "symbol": "PYTH",
+      "name": "Pyth Network",
+      "price": 0.2029,
+      "change24h": -0.02,
+      "volume24h": 3.99,
+      "marketCap": 2029611644,
+      "image": "",
+      "address": "DFf5TTfDnX8MB28WKvZxnMfiDNaVAS3sjagHg6Bb1ayW",
+      "pairAddress": "B8tGEgWMn7PPomu9ApmGgACfHtw5yRDdoeXn1vi7A3d3"
     }
   ]
 }
