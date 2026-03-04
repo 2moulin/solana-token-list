@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-03-04T07:06:04.609Z",
+  "updatedAt": "2026-03-04T07:48:38.791Z",
   "tokens": [
     {
       "symbol": "SOL",
       "name": "Solana",
       "price": 143.41,
       "change24h": -0.47,
-      "volume24h": 537741.69,
+      "volume24h": 597882.69,
       "marketCap": 3298485,
       "image": "",
       "address": "So11111111111111111111111111111111111111112",
