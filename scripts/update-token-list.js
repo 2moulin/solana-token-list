@@ -18,107 +18,105 @@ function fetchJson(url) {
   });
 }
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-async function fetchTop50PopularTokens(forceRefresh = false) {
-  const currentHour = new Date().getUTCHours();
-  const shouldRefresh = forceRefresh || (currentHour === 8 || currentHour === 12 || currentHour === 20);
-  if (!shouldRefresh) {
-    try {
-      if (fs.existsSync('tokens.json')) {
-        const data = JSON.parse(fs.readFileSync('tokens.json', 'utf8'));
-        if (data.popularTokens && data.popularTokens.length > 0) {
-          console.log(`Using cached trending tokens (${data.popularTokens.length} tokens)`);
-          console.log(' Next trending refresh: 8h, 12h, or 20h UTC');
-          return data.popularTokens;
-        }
-      }
-    } catch (error) {
-      console.log('Failed to load cached trending tokens, fetching fresh...');
+async function fetchTop100PopularTokens() {
+  console.log('🔥 Fetching top 100+ popular Solana tokens...');
+
+  const seen = new Set();
+  const result = [];
+
+  function addToken(address) {
+    if (!seen.has(address)) {
+      seen.add(address);
+      result.push(address);
     }
   }
-  console.log('Fetching top 50 trending Solana tokens from DexScreener...');
+
+  // ── Tier 1: Hardcoded essentials (always first, never changes) ──
+  const essentials = [
+    'So11111111111111111111111111111111111111112',   // SOL
+    'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', // USDC
+    'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB', // USDT
+  ];
+  essentials.forEach(addToken);
+
+  // ── Tier 2: CoinGecko top Solana tokens by market cap ──
+  // Fetch market list (IDs) + full coin list (addresses) in parallel
   try {
-    const searches = [
-      'bonk', 'wif', 'jup', 'jto', 'pyth', 'wen', 'myro', 'popcat',
-      'mew', 'bome', 'slerf', 'smog', 'silly', 'nub', 'peng'
-    ];
-    const allTopTokens = [];
-    const seen = new Set();
-    const essentials = [
-      { address: 'So11111111111111111111111111111111111111112', priority: 1 },
-      { address: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', priority: 2 },
-      { address: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB', priority: 3 },
-      { address: 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263', priority: 4 },
-      { address: 'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN', priority: 5 },
-      { address: 'EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm', priority: 6 },
-      { address: 'HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3', priority: 7 },
-      { address: 'jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL', priority: 8 },
-      { address: 'WENWENvqqNya429ubCdR81ZmD69brwQaaBYY6p3LCpk', priority: 9 },
-      { address: 'HhJpBhRRn4g56VsyLuT8DL5Bv31HkXqsrahTTUCZeZg4', priority: 10 },
-    ];
-    essentials.forEach(token => {
-      seen.add(token.address);
-      allTopTokens.push(token);
+    console.log('   📊 Fetching CoinGecko top 200 Solana tokens by market cap...');
+    // Sequential to avoid CoinGecko free tier rate limiting (~10 req/min)
+    const marketsPage1 = await fetchJson('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&category=solana-ecosystem&order=market_cap_desc&per_page=100&page=1&sparkline=false');
+    await sleep(1500);
+    const marketsPage2 = await fetchJson('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&category=solana-ecosystem&order=market_cap_desc&per_page=100&page=2&sparkline=false');
+    await sleep(1500);
+    const coinList = await fetchJson('https://api.coingecko.com/api/v3/coins/list?include_platform=true');
+
+    // Guard: CoinGecko might return error objects instead of arrays when rate-limited
+    if (!Array.isArray(coinList) || !Array.isArray(marketsPage1)) {
+      throw new Error('CoinGecko returned non-array (rate limited?)');
+    }
+
+    // Build ID → Solana address map
+    const idToAddr = {};
+    coinList.forEach(c => {
+      if (c.platforms && c.platforms.solana) {
+        idToAddr[c.id] = c.platforms.solana;
+      }
     });
+
+    // Add tokens in market cap order
+    const markets = [...marketsPage1, ...(Array.isArray(marketsPage2) ? marketsPage2 : [])];
+    let cgCount = 0;
+    markets.forEach(coin => {
+      const addr = idToAddr[coin.id];
+      if (addr) {
+        addToken(addr);
+        cgCount++;
+      }
+    });
+    console.log(`   ✅ CoinGecko: ${cgCount} tokens added by market cap rank`);
+  } catch (error) {
+    console.error('   ❌ CoinGecko popular fetch failed:', error.message);
+  }
+
+  // ── Tier 3: DexScreener trending (fresh meme/hype tokens) ──
+  try {
+    console.log('   🔥 Fetching DexScreener trending tokens...');
+    const searches = [
+      'bonk', 'wif', 'jup', 'jto', 'pyth', 'popcat', 'mew',
+      'pengu', 'trump', 'melania', 'fartcoin', 'grass', 'render',
+      'ray', 'orca', 'drift', 'marinade', 'raydium', 'jupiter',
+      'helium', 'virtual', 'pippin', 'pump', 'ban', 'arc'
+    ];
+
+    let dexCount = 0;
     for (const query of searches) {
       try {
-        const url = `https://api.dexscreener.com/latest/dex/search?q=${query}`;
-        const data = await fetchJson(url);
-        if (data.pairs && data.pairs.length > 0) {
-          const topPairs = data.pairs
+        const data = await fetchJson(`https://api.dexscreener.com/latest/dex/search?q=${query}`);
+        if (data && data.pairs) {
+          data.pairs
             .filter(p => p.chainId === 'solana')
             .sort((a, b) => (b.volume?.h24 || 0) - (a.volume?.h24 || 0))
-            .slice(0, 3);
-          topPairs.forEach(pair => {
-            const address = pair.baseToken.address;
-            if (!seen.has(address)) {
-              seen.add(address);
-              allTopTokens.push({
-                address,
-                priority: allTopTokens.length + 1
-              });
-            }
-          });
+            .slice(0, 3)
+            .forEach(pair => {
+              if (pair.baseToken && pair.baseToken.address) {
+                const before = result.length;
+                addToken(pair.baseToken.address);
+                if (result.length > before) dexCount++;
+              }
+            });
         }
         await sleep(350);
-      } catch (error) {
-        console.error(`Error searching ${query}:`, error.message);
+      } catch (e) {
+        // skip individual search errors
       }
     }
-    const top50 = allTopTokens
-      .sort((a, b) => a.priority - b.priority)
-      .slice(0, 50)
-      .map(t => t.address);
-    return [
-      'So11111111111111111111111111111111111111112',
-      'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-      'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
-      'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263',
-      'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN',
-      'EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm',
-      'HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3',
-      'jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL',
-      'WENWENvqqNya429ubCdR81ZmD69brwQaaBYY6p3LCpk',
-      'HhJpBhRRn4g56VsyLuT8DL5Bv31HkXqsrahTTUCZeZg4',
-      'MEW1gQWJ3nEXg2qgERiKu7FAFj79PHvQVREQUzScPP5',
-      'ukHH6c7mMyiWCf1b9pnWe25TSpkDDt3H5pQZgZ74J82',
-    ];
+    console.log(`   ✅ DexScreener: ${dexCount} extra trending tokens added`);
   } catch (error) {
-    console.error('❌ Failed to fetch trending tokens, using fallback list:', error.message);
-    return [
-      'So11111111111111111111111111111111111111112',
-      'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-      'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
-      'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263',
-      'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN',
-      'EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm',
-      'HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3',
-      'jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL',
-      'WENWENvqqNya429ubCdR81ZmD69brwQaaBYY6p3LCpk',
-      'HhJpBhRRn4g56VsyLuT8DL5Bv31HkXqsrahTTUCZeZg4',
-      'MEW1gQWJ3nEXg2qgERiKu7FAFj79PHvQVREQUzScPP5',
-      'ukHH6c7mMyiWCf1b9pnWe25TSpkDDt3H5pQZgZ74J82',
-    ];
+    console.error('   ❌ DexScreener trending fetch failed:', error.message);
   }
+
+  console.log(`   📋 Total popular tokens: ${result.length}`);
+  return result;
 }
 function loadExistingTokens() {
   try {
@@ -246,6 +244,7 @@ async function fetchDexScreenerSmart(knownAddresses) {
     try {
       const progress = Math.round((i / queries.length) * 100);
       process.stdout.write(`\r[${progress}%] ${i + 1}/${queries.length}: ${query.padEnd(20)} (${newFound} new)`);
+
       const data = await fetchJson(`https://api.dexscreener.com/latest/dex/search?q=${query}`);
       requestCount++;
       if (data && data.pairs) {
@@ -401,7 +400,7 @@ function deduplicateTokens(tokens, popularTokens) {
 async function buildMegaTokenList() {
   const stats = {};
   const allTokens = [];
-  const POPULAR_TOKENS = await fetchTop50PopularTokens();
+  const POPULAR_TOKENS = await fetchTop100PopularTokens();
   console.log('');
   const existingTokens = loadExistingTokens();
   const knownAddresses = getKnownAddresses(existingTokens);
@@ -449,7 +448,7 @@ async function buildMegaTokenList() {
     const bVol = b.volume24h || 0;
     return bVol - aVol;
   });
-  console.log(`   Sorted:    Top 50 popular tokens prioritized`);
+  console.log(`   Sorted:    Top ${POPULAR_TOKENS.length} popular tokens prioritized`);
   const newTokensAdded = sorted.length - existingTokens.length;
   const discoveryRate = allTokens.length > 0 ? ((newTokensAdded / allTokens.length) * 100).toFixed(1) : 0;
   console.log('');

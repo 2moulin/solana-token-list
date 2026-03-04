@@ -2,9 +2,9 @@
   "name": "solana-token-list",
   "version": "1.0.0",
   "description": "Automated Solana token list for Tenet Wallet",
-  "main": "scripts/crawl-tokens.js",
+  "main": "scripts/update-token-list.js",
   "scripts": {
-    "build": "node scripts/crawl-tokens.js"
+    "build": "node scripts/update-token-list.js"
   },
   "keywords": ["solana", "tokens", "spl"],
   "author": "Tenet Wallet",
