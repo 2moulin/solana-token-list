@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-04T07:48:38.791Z",
+  "updatedAt": "2026-03-04T08:20:54.103Z",
   "tokens": [
     {
       "symbol": "SOL",
@@ -13,15 +13,15 @@
       "pairAddress": "3fkdUeRvUnSKKYgTyX1hkiJmJVbiYtDwyBwxYW19n28t"
     },
     {
-      "symbol": "TRUMP",
-      "name": "MAGA (magamemecoin.com)",
-      "price": 2.79,
-      "change24h": 0,
+      "symbol": "PENGU",
+      "name": "Pudgy Penguins",
+      "price": 0.03869,
+      "change24h": -0.02,
       "volume24h": 7.99,
-      "marketCap": 123183921,
+      "marketCap": 2432553219,
       "image": "",
-      "address": "5sNU6g1qVji5dEBnb6SWSX2Gu2rtDvvk7khKyujj6cuU",
-      "pairAddress": "EXuuNT42v3S7p7T8W7knEgRtCcDvcUtxdUXnknpnHA3p"
+      "address": "9Qq3cwZkScM2TUXLHaMWJHxaJYaPEeG1uP1UmuFCCh7R",
+      "pairAddress": "51eNU1Xn9Qu5C86iC8aM1PUSyLZ1huQpd5cWFeoo8CcA"
     },
     {
       "symbol": "POPCAT",
@@ -90,15 +90,15 @@
       "pairAddress": "CAfkBm4ZW8SB9vbvX8GNNZRo6obF4FEz7Vd3xKiQiE5k"
     },
     {
-      "symbol": "PENGU",
-      "name": "Pudgy Penguins",
-      "price": 0.03869,
-      "change24h": -0.02,
+      "symbol": "TRUMP",
+      "name": "MAGA (magamemecoin.com)",
+      "price": 2.79,
+      "change24h": 0,
       "volume24h": 3.99,
-      "marketCap": 2432553219,
+      "marketCap": 123183921,
       "image": "",
-      "address": "9Qq3cwZkScM2TUXLHaMWJHxaJYaPEeG1uP1UmuFCCh7R",
-      "pairAddress": "51eNU1Xn9Qu5C86iC8aM1PUSyLZ1huQpd5cWFeoo8CcA"
+      "address": "5sNU6g1qVji5dEBnb6SWSX2Gu2rtDvvk7khKyujj6cuU",
+      "pairAddress": "EXuuNT42v3S7p7T8W7knEgRtCcDvcUtxdUXnknpnHA3p"
     },
     {
       "symbol": "RAY",
