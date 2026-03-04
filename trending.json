@@ -1,16 +1,27 @@
 {
-  "updatedAt": "2026-03-04T08:20:54.103Z",
+  "updatedAt": "2026-03-04T08:59:28.046Z",
   "tokens": [
     {
       "symbol": "SOL",
       "name": "Solana",
       "price": 143.41,
       "change24h": -0.47,
-      "volume24h": 597882.69,
-      "marketCap": 3298485,
+      "volume24h": 658042.03,
+      "marketCap": 3298472,
       "image": "",
       "address": "So11111111111111111111111111111111111111112",
       "pairAddress": "3fkdUeRvUnSKKYgTyX1hkiJmJVbiYtDwyBwxYW19n28t"
+    },
+    {
+      "symbol": "JUP",
+      "name": "Jupiter",
+      "price": 0.8006,
+      "change24h": 0,
+      "volume24h": 7.99,
+      "marketCap": 8006022814,
+      "image": "",
+      "address": "Egtoetiw3pKRNSzwgXZRWgMCbUSZmb2qPVwP2w8BoAzw",
+      "pairAddress": "CAfkBm4ZW8SB9vbvX8GNNZRo6obF4FEz7Vd3xKiQiE5k"
     },
     {
       "symbol": "PENGU",
@@ -22,17 +33,6 @@
       "image": "",
       "address": "9Qq3cwZkScM2TUXLHaMWJHxaJYaPEeG1uP1UmuFCCh7R",
       "pairAddress": "51eNU1Xn9Qu5C86iC8aM1PUSyLZ1huQpd5cWFeoo8CcA"
-    },
-    {
-      "symbol": "POPCAT",
-      "name": "Popcat (SOL)",
-      "price": 0.6179,
-      "change24h": -0.04,
-      "volume24h": 7.99,
-      "marketCap": 605590361,
-      "image": "",
-      "address": "Cpnm1fZUjm48M54Gaae2kwQfMgHX9NZHozhyVb55rfyD",
-      "pairAddress": "EbYMiGkh36mcQ6sHDdizW96Qd3CsM9GTw8kSbA4fPvhv"
     },
     {
       "symbol": "RENDER",
@@ -79,17 +79,6 @@
       "pairAddress": "AhnSokYSRhBQCGkvidA2WqczjUbcHq1PqapuA1PPjLQ8"
     },
     {
-      "symbol": "JUP",
-      "name": "Jupiter",
-      "price": 0.8006,
-      "change24h": 0,
-      "volume24h": 3.99,
-      "marketCap": 8006022814,
-      "image": "",
-      "address": "Egtoetiw3pKRNSzwgXZRWgMCbUSZmb2qPVwP2w8BoAzw",
-      "pairAddress": "CAfkBm4ZW8SB9vbvX8GNNZRo6obF4FEz7Vd3xKiQiE5k"
-    },
-    {
       "symbol": "TRUMP",
       "name": "MAGA (magamemecoin.com)",
       "price": 2.79,
@@ -99,6 +88,17 @@
       "image": "",
       "address": "5sNU6g1qVji5dEBnb6SWSX2Gu2rtDvvk7khKyujj6cuU",
       "pairAddress": "EXuuNT42v3S7p7T8W7knEgRtCcDvcUtxdUXnknpnHA3p"
+    },
+    {
+      "symbol": "POPCAT",
+      "name": "Popcat (SOL)",
+      "price": 0.6179,
+      "change24h": -0.04,
+      "volume24h": 3.99,
+      "marketCap": 605590361,
+      "image": "",
+      "address": "Cpnm1fZUjm48M54Gaae2kwQfMgHX9NZHozhyVb55rfyD",
+      "pairAddress": "EbYMiGkh36mcQ6sHDdizW96Qd3CsM9GTw8kSbA4fPvhv"
     },
     {
       "symbol": "RAY",
