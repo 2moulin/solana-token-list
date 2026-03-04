@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-03-04T08:59:28.046Z",
+  "updatedAt": "2026-03-04T09:45:50.923Z",
   "tokens": [
     {
       "symbol": "SOL",
       "name": "Solana",
       "price": 143.41,
       "change24h": -0.47,
-      "volume24h": 658042.03,
+      "volume24h": 718185.03,
       "marketCap": 3298472,
       "image": "",
       "address": "So11111111111111111111111111111111111111112",
@@ -102,14 +102,14 @@
     },
     {
       "symbol": "RAY",
-      "name": "Raydium✅",
-      "price": 3.59,
-      "change24h": -0.02,
+      "name": "Raydium",
+      "price": 2.96,
+      "change24h": -0.04,
       "volume24h": 3.99,
-      "marketCap": 1046776551,
+      "marketCap": 1646672124,
       "image": "",
-      "address": "6EACtpDaVsmPz78pSHrHSwgtUrTmgJ1WZ5KCdfA137MF",
-      "pairAddress": "3HGw2S9GwGhbWQ7r7LhDxNMhweCnsp1kBbvzjBUuGvTN"
+      "address": "8k3vk24p8X9LMWQE8CouLtLryUoC5p7Emh2Xd7wwQnWa",
+      "pairAddress": "6QWZAqbsyg1EwndUkFaJhvNp1jJgrSTUyVBQB6yDWAyX"
     }
   ]
 }
