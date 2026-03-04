@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Fetch trending Solana tokens from CoinGecko + DexScreener
+// Fetch trending Solana tokens using verified mint addresses + DexScreener
 // Runs via GitHub Actions every 5 minutes
 // Output: trending.json (served via GitHub Pages)
 
@@ -8,17 +8,36 @@ const https = require('https');
 
 const OUTPUT_FILE = 'trending.json';
 
-// Exclude stablecoins, wrapped tokens, bridges
-const EXCLUDE_SYMBOLS = new Set([
-  'USDT', 'USDC', 'DAI', 'BUSD', 'TUSD', 'USDP', 'GUSD', 'PAX', 'USDD', 'USDS', 'USD1',
-  'PYUSD', 'USDG', 'USDE', 'SUSDE', 'USYC', 'BUIDL', 'AUSD', 'USAD', 'EURC', 'FDUSD',
-  'WETH', 'WBTC', 'WBNB', 'WMATIC', 'WSOL', 'WLINK', 'CBBTC', 'TBTC',
-  'UNI', 'AAVE', 'SUSHI', 'AVAX', 'FTM', 'MATIC', 'LINK', 'WLFI',
-]);
+// Verified Solana token mint addresses
+const KNOWN_TOKENS = [
+  { address: 'So11111111111111111111111111111111111111112', symbol: 'SOL', name: 'Solana' },
+  { address: 'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN', symbol: 'JUP', name: 'Jupiter' },
+  { address: 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263', symbol: 'BONK', name: 'Bonk' },
+  { address: 'EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm', symbol: 'WIF', name: 'dogwifhat' },
+  { address: 'HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3', symbol: 'PYTH', name: 'Pyth Network' },
+  { address: '4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R', symbol: 'RAY', name: 'Raydium' },
+  { address: 'rndrizKT3MK1iimdxRdWabcF7Zg7AR5T4nud4EkHBof', symbol: 'RENDER', name: 'Render' },
+  { address: '2zMMhcVQEXDtdE6vsFS7S7D5oUodfJHE8vd1gnBouauv', symbol: 'PENGU', name: 'Pudgy Penguins' },
+  { address: '7GCihgDB8fe6KNjn2MYtkzZcRjQy3t9GHdC8uHYmW2hr', symbol: 'POPCAT', name: 'Popcat' },
+  { address: 'orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE', symbol: 'ORCA', name: 'Orca' },
+  { address: 'jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL', symbol: 'JTO', name: 'Jito' },
+  { address: 'hntyVP6YFm1Hg25TN9WGLqM12b8TQmcknKrdu1oxWux', symbol: 'HNT', name: 'Helium' },
+  { address: 'TNSRxcUxoT9xBG3de7PiJyTDYu7kskLqcpddxnEJAS6', symbol: 'TNSR', name: 'Tensor' },
+  { address: 'DriFtupJYLTosbwoN8koMbEYSx54aFAVLddWsbksjwg7', symbol: 'DRIFT', name: 'Drift' },
+  { address: 'MEW1gQWJ3nEXg2qgERiKu7FAFj79PHvQVREQUzScPP5', symbol: 'MEW', name: 'cat in a dogs world' },
+  { address: '9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump', symbol: 'FARTCOIN', name: 'Fartcoin' },
+  { address: 'Grass7B4RdKfBCjTKgSqnXkqjwiGvQyFbuSCUJr3XXjs', symbol: 'GRASS', name: 'Grass' },
+  { address: 'KMNo3nJsBXfcpJTVhZcXLW7RmTwTt4GVFE7suUBo9sS', symbol: 'KMNO', name: 'Kamino' },
+  { address: '6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN', symbol: 'TRUMP', name: 'Official Trump' },
+  { address: 'SHDWyBxihqiCj6YekG2GUr7wqKLeLAMK1gHZck9pL6y', symbol: 'SHDW', name: 'Shadow Token' },
+  { address: 'nosXBVoaCTtYdLvKY6Csb4AC8JCdQKKAaWYtx2ZMoo7', symbol: 'NOS', name: 'Nosana' },
+  { address: '85VBFQZC9TZkfaptBWjvUw7YbZjy52A6mjtPGjstQAmQ', symbol: 'W', name: 'Wormhole' },
+  { address: 'HeLp6NuQkmYB4pYWo2zYs22mESHXPQYzXbB8n4V98jwC', symbol: 'AI16Z', name: 'ai16z' },
+];
 
 function fetch(url) {
   return new Promise((resolve, reject) => {
-    const req = https.get(url, { headers: { 'Accept': 'application/json' } }, (res) => {
+    const req = https.get(url, { headers: { 'Accept': 'application/json', 'User-Agent': 'SolanaTokenList/1.0' } }, (res) => {
       if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
         return fetch(res.headers.location).then(resolve).catch(reject);
       }
@@ -37,120 +56,102 @@ function fetch(url) {
   });
 }
 
-function isValid(symbol, name) {
-  const sym = symbol.toUpperCase();
-  if (EXCLUDE_SYMBOLS.has(sym)) return false;
-  const n = name.toUpperCase();
-  if (n.includes('WRAPPED') || n.includes('WORMHOLE') || n.includes('BRIDGED')) return false;
-  return true;
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function main() {
   const results = [];
-  const seen = new Set();
 
-  // Source 1: CoinGecko Solana ecosystem by volume (top active tokens)
+  // Fetch each token individually from DexScreener (accurate data per token)
+  console.log(`Fetching ${KNOWN_TOKENS.length} tokens from DexScreener...`);
+
+  for (const token of KNOWN_TOKENS) {
+    try {
+      const raw = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${token.address}`);
+      const data = JSON.parse(raw);
+
+      // Filter for Solana pairs where this token is the base token
+      const pairs = (data.pairs || []).filter(p =>
+        p.chainId === 'solana' && p.baseToken.address === token.address
+      );
+
+      if (pairs.length === 0) {
+        console.log(`  ${token.symbol}: no pairs found, skipping`);
+        continue;
+      }
+
+      // Sort by liquidity to get the most reliable pair for price
+      pairs.sort((a, b) => (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0));
+      const best = pairs[0];
+
+      // Aggregate volume across ALL pairs for this token
+      const totalVolume = pairs.reduce((sum, p) => sum + (p.volume?.h24 || 0), 0);
+
+      results.push({
+        symbol: token.symbol,
+        name: token.name,
+        price: parseFloat(best.priceUsd) || 0,
+        change24h: best.priceChange?.h24 || 0,
+        volume24h: totalVolume,
+        marketCap: best.marketCap || best.fdv || 0,
+        image: best.info?.imageUrl || '',
+        address: token.address,
+        pairAddress: best.pairAddress,
+      });
+
+      console.log(`  ${token.symbol}: $${best.priceUsd} | vol: $${totalVolume.toFixed(0)} | ${pairs.length} pairs`);
+
+      // Small delay between calls to be polite (25 calls well within 300/min)
+      await sleep(200);
+    } catch (e) {
+      console.error(`  ${token.symbol}: ${e.message}`);
+    }
+  }
+
+  console.log(`\nGot ${results.length}/${KNOWN_TOKENS.length} tokens from DexScreener`);
+
+  // Bonus: try CoinGecko to enrich data (better images, market cap)
   try {
-    console.log('Fetching CoinGecko Solana ecosystem...');
+    console.log('Fetching CoinGecko enrichment...');
     const raw = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&category=solana-ecosystem&order=volume_desc&per_page=50&page=1&sparkline=false&price_change_percentage=24h');
     const coins = JSON.parse(raw);
 
+    const cgMap = {};
     for (const coin of coins) {
-      const sym = coin.symbol.toUpperCase();
-      if (!isValid(sym, coin.name)) continue;
-      if (coin.current_price <= 0) continue;
-      if ((coin.market_cap || 0) <= 0) continue;
-      if (seen.has(sym)) continue;
-      seen.add(sym);
-
-      results.push({
-        symbol: sym,
-        name: coin.name,
-        price: coin.current_price,
-        change24h: coin.price_change_percentage_24h || 0,
-        volume24h: coin.total_volume || 0,
-        marketCap: coin.market_cap || 0,
-        image: coin.image || '',
-      });
+      cgMap[coin.symbol.toUpperCase()] = coin;
     }
-    console.log(`  Got ${results.length} tokens from CoinGecko`);
+
+    for (const token of results) {
+      const cg = cgMap[token.symbol];
+      if (!cg) continue;
+      // CoinGecko has better aggregate volume and market cap
+      if (cg.total_volume > token.volume24h) token.volume24h = cg.total_volume;
+      if (cg.market_cap > token.marketCap) token.marketCap = cg.market_cap;
+      if (!token.image && cg.image) token.image = cg.image;
+      if (cg.price_change_percentage_24h != null) token.change24h = cg.price_change_percentage_24h;
+    }
+    console.log('  CoinGecko enrichment applied');
   } catch (e) {
-    console.error('CoinGecko fetch failed:', e.message);
+    console.error('  CoinGecko enrichment failed (non-critical):', e.message);
   }
 
-  // Source 2: DexScreener — search popular Solana tokens to fill gaps
-  const dexQueries = ['SOL', 'BONK', 'WIF', 'JUP', 'TRUMP', 'PENGU', 'POPCAT', 'RENDER', 'RAY', 'PYTH'];
-  const queriesToRun = dexQueries.filter(q => !seen.has(q));
-  if (queriesToRun.length > 0) {
-    console.log(`Fetching ${queriesToRun.length} tokens from DexScreener...`);
-    for (const query of queriesToRun) {
-      try {
-        const raw = await fetch(`https://api.dexscreener.com/latest/dex/search?q=${query}`);
-        const data = JSON.parse(raw);
-        const candidates = (data.pairs || [])
-          .filter(p =>
-            p.chainId === 'solana' &&
-            p.baseToken.symbol.toUpperCase() === query &&
-            (p.liquidity?.usd || 0) >= 50000
-          )
-          .sort((a, b) => (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0));
-        const match = candidates[0];
-        if (!match) continue;
-        const sym = match.baseToken.symbol.toUpperCase();
-        if (seen.has(sym)) continue;
-        seen.add(sym);
-        results.push({
-          symbol: sym,
-          name: match.baseToken.name,
-          price: parseFloat(match.priceUsd) || 0,
-          change24h: match.priceChange?.h24 || 0,
-          volume24h: match.volume?.h24 || 0,
-          marketCap: match.marketCap || 0,
-          image: match.info?.imageUrl || '',
-          address: match.baseToken.address,
-          pairAddress: match.pairAddress,
-        });
-      } catch { /* skip */ }
-    }
-    console.log(`  Total tokens after DexScreener: ${results.length}`);
-  }
-
-  // Source 3: Resolve Solana addresses for CoinGecko tokens via DexScreener
-  const needAddress = results.filter(t => !t.address && t.symbol !== 'SOL');
-  if (needAddress.length > 0) {
-    console.log(`Resolving ${needAddress.length} token addresses via DexScreener...`);
-    // Batch: max 5 lookups to stay within rate limits
-    for (const token of needAddress.slice(0, 5)) {
-      try {
-        const raw = await fetch(`https://api.dexscreener.com/latest/dex/search?q=${encodeURIComponent(token.symbol)}`);
-        const data = JSON.parse(raw);
-        const match = (data.pairs || []).find(p =>
-          p.chainId === 'solana' &&
-          p.baseToken.symbol.toUpperCase() === token.symbol &&
-          (p.liquidity?.usd || 0) >= 10000
-        );
-        if (match) {
-          token.address = match.baseToken.address;
-          token.pairAddress = match.pairAddress;
-        }
-      } catch { /* skip */ }
-    }
-  }
-
-  // SOL special case
-  const sol = results.find(t => t.symbol === 'SOL');
-  if (sol) sol.address = 'So11111111111111111111111111111111111111112';
+  // Filter out tokens with no price
+  const valid = results.filter(t => t.price > 0);
 
   // Sort by volume (most traded first)
-  results.sort((a, b) => (b.volume24h || 0) - (a.volume24h || 0));
+  valid.sort((a, b) => (b.volume24h || 0) - (a.volume24h || 0));
 
   // Keep top 20
-  const top = results.slice(0, 20);
+  const top = valid.slice(0, 20);
 
   const output = {
     updatedAt: new Date().toISOString(),
     tokens: top,
   };
+
+  // Clean up floating point artifacts
+  top.forEach(t => { t.volume24h = Math.round(t.volume24h); });
 
   fs.writeFileSync(OUTPUT_FILE, JSON.stringify(output, null, 2));
   console.log(`\nWrote ${top.length} trending tokens to ${OUTPUT_FILE}`);
