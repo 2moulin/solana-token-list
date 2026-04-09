@@ -3,6 +3,11 @@ on:
   schedule:
     - cron: '*/5 * * * *'
   workflow_dispatch:
+
+concurrency:
+  group: trending-update
+  cancel-in-progress: false
+
 jobs:
   update-trending:
     runs-on: ubuntu-latest
@@ -11,6 +16,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -28,4 +34,5 @@ jobs:
           git config user.email "actions@github.com"
           git add trending.json
           git commit -m "Update trending - $(date +'%Y-%m-%d %H:%M')"
+          git pull --rebase origin main
           git push
