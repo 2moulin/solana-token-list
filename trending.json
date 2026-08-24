@@ -1,16 +1,4 @@
 {
-  "updatedAt": "2026-08-24T12:03:44.228Z",
-  "tokens": [
-    {
-      "symbol": "AI16Z",
-      "name": "ai16z",
-      "price": 0.000438,
-      "change24h": 6.39,
-      "volume24h": 17700,
-      "marketCap": 481902,
-      "image": "https://cdn.dexscreener.com/cms/images/f88abc595c9b7385c582d97f9a113c8339f51ffc46d4bf25b96e49723b30e2da?width=800&height=800&quality=95&format=auto",
-      "address": "HeLp6NuQkmYB4pYWo2zYs22mESHXPQYzXbB8n4V98jwC",
-      "pairAddress": "7qAVrzrbULwg1B13YseqA95Uapf8EVp9jQE5uipqFMoP"
-    }
-  ]
+  "updatedAt": "2026-08-24T12:52:56.757Z",
+  "tokens": []
 }
