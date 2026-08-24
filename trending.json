@@ -1,16 +1,16 @@
 {
-  "updatedAt": "2026-08-24T11:43:34.299Z",
+  "updatedAt": "2026-08-24T12:03:44.228Z",
   "tokens": [
     {
-      "symbol": "SHDW",
-      "name": "Shadow Token",
-      "price": 0.02266,
-      "change24h": -2.63,
-      "volume24h": 13925,
-      "marketCap": 3832191,
-      "image": "https://cdn.dexscreener.com/cms/images/000aa7318c165ea5a27d4b5797c386d5d75d764be667e80083e0b7d95a425967?width=800&height=800&quality=95&format=auto",
-      "address": "SHDWyBxihqiCj6YekG2GUr7wqKLeLAMK1gHZck9pL6y",
-      "pairAddress": "25bQ6UzZpgFgnU7MqZdqM9Axi6oJunytRL2LgXruDWZB"
+      "symbol": "AI16Z",
+      "name": "ai16z",
+      "price": 0.000438,
+      "change24h": 6.39,
+      "volume24h": 17700,
+      "marketCap": 481902,
+      "image": "https://cdn.dexscreener.com/cms/images/f88abc595c9b7385c582d97f9a113c8339f51ffc46d4bf25b96e49723b30e2da?width=800&height=800&quality=95&format=auto",
+      "address": "HeLp6NuQkmYB4pYWo2zYs22mESHXPQYzXbB8n4V98jwC",
+      "pairAddress": "7qAVrzrbULwg1B13YseqA95Uapf8EVp9jQE5uipqFMoP"
     }
   ]
 }
