@@ -1,4 +1,16 @@
 {
-  "updatedAt": "2026-08-24T12:52:56.757Z",
-  "tokens": []
+  "updatedAt": "2026-08-24T13:43:37.274Z",
+  "tokens": [
+    {
+      "symbol": "NOS",
+      "name": "Nosana",
+      "price": 0.269,
+      "change24h": -4.34,
+      "volume24h": 156575,
+      "marketCap": 26906770,
+      "image": "https://cdn.dexscreener.com/cms/images/ea718824b6ac3d695f53daf6be0c644bb5248d4c97fda509c824fe60309f6306?width=800&height=800&quality=95&format=auto",
+      "address": "nosXBVoaCTtYdLvKY6Csb4AC8JCdQKKAaWYtx2ZMoo7",
+      "pairAddress": "3GkFzURGWNWyErnjQvnkZpgcLnNocjnRwvMYXiVDiVQk"
+    }
+  ]
 }
