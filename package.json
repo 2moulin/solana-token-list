@@ -6,10 +6,14 @@
   "scripts": {
     "build": "node scripts/update-token-list.js"
   },
-  "keywords": ["solana", "tokens", "spl"],
+  "keywords": [
+    "solana",
+    "tokens",
+    "spl"
+  ],
   "author": "Tenet Wallet",
   "license": "MIT",
   "dependencies": {
-    "@solana/web3.js": "^1.95.8"
+    "@solana/web3.js": "^1.98.4"
   }
 }
