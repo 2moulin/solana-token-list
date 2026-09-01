@@ -1,13 +1,13 @@
 {
-  "updatedAt": "2026-09-01T20:10:40.547Z",
+  "updatedAt": "2026-09-01T22:35:03.103Z",
   "tokens": [
     {
       "symbol": "SOL",
       "name": "Solana",
-      "price": 99.96,
-      "change24h": -3.66056,
-      "volume24h": 3272698549,
-      "marketCap": 58472711273,
+      "price": 99.45,
+      "change24h": -3.77597,
+      "volume24h": 3340536037,
+      "marketCap": 58174995157,
       "image": "https://cdn.dexscreener.com/cms/images/fcfb87378d3198fe753ca08ba51a5552a84f34cf48cd09d83971aa195bdf00d2?width=800&height=800&quality=95&format=auto",
       "address": "So11111111111111111111111111111111111111112",
       "pairAddress": "Czfq3xZZDmsdGdUyrNLtRhGc47cXcZtLG4crryfu44zE"
@@ -15,10 +15,10 @@
     {
       "symbol": "TRUMP",
       "name": "Official Trump",
-      "price": 2.27,
-      "change24h": -6.30856,
-      "volume24h": 209165490,
-      "marketCap": 596100016,
+      "price": 2.26,
+      "change24h": -6.84474,
+      "volume24h": 207311498,
+      "marketCap": 590995146,
       "image": "https://cdn.dexscreener.com/cms/images/85a2613c51c8ded8e51b1b3910487ab66691cb60fecec7d0905481a603bba899?width=800&height=800&quality=95&format=auto",
       "address": "6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN",
       "pairAddress": "9d9mb8kooFfaD3SctgZtkxQypkshx6ezhbKio89ixyy2"
@@ -26,10 +26,10 @@
     {
       "symbol": "PENGU",
       "name": "Pudgy Penguins",
-      "price": 0.008446,
-      "change24h": -2.73952,
-      "volume24h": 152784979,
-      "marketCap": 532742286,
+      "price": 0.008425,
+      "change24h": -4.0543,
+      "volume24h": 152496527,
+      "marketCap": 529614360,
       "image": "https://cdn.dexscreener.com/cms/images/9d5188f603b49ab02f7a75e5d2c2959ec2947c98181501fb11688672e9394efd?width=800&height=800&quality=95&format=auto",
       "address": "2zMMhcVQEXDtdE6vsFS7S7D5oUodfJHE8vd1gnBouauv",
       "pairAddress": "DdMA1cHcHEqYfttc1z1sJEY978CcU1pyjNuTWTNmdvzU"
@@ -38,9 +38,9 @@
       "symbol": "BONK",
       "name": "Bonk",
       "price": 0.015,
-      "change24h": 2.37982,
-      "volume24h": 78218030,
-      "marketCap": 1320419850030,
+      "change24h": -1.61333,
+      "volume24h": 76814887,
+      "marketCap": 1320419129825,
       "image": "https://cdn.dexscreener.com/cms/images/ba03c0370670d176dc33bbd212eb023337a460ad7edfa053ca96ae22f31c3dcf?width=800&height=800&quality=95&format=auto",
       "address": "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
       "pairAddress": "2hXcTGNfeQFNsxV8d7ztYbEBEAowMwWvEdQQ8V3obyas"
@@ -48,21 +48,21 @@
     {
       "symbol": "JUP",
       "name": "Jupiter",
-      "price": 1053.17,
-      "change24h": -0.16804,
-      "volume24h": 70571472,
-      "marketCap": 3496867457935,
+      "price": 1052.83,
+      "change24h": -5.25154,
+      "volume24h": 63769633,
+      "marketCap": 3495739278900,
       "image": "https://cdn.dexscreener.com/cms/images/4afaadf0f388adf44bd3a33cedfc601938f74ab7ede6d78e4063777bb0f64780?width=800&height=800&quality=95&format=auto",
       "address": "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN",
-      "pairAddress": "3xNGdc58axYtrJ64STQz5TrdQWVtWHLR888iRBbWZnEe"
+      "pairAddress": "Hk25q7zys179Awoyaa15DVT8DmLECwyha1F8Drp3r9Bj"
     },
     {
       "symbol": "WIF",
       "name": "dogwifhat",
-      "price": 0.1983,
-      "change24h": 0.41574,
-      "volume24h": 58898316,
-      "marketCap": 198157999,
+      "price": 0.1947,
+      "change24h": -1.68063,
+      "volume24h": 58168990,
+      "marketCap": 194771031,
       "image": "https://cdn.dexscreener.com/cms/images/c3788335fe7010d9c32ede4f211118f4a703e0b47fee61cd503c33cc9cde242a?width=800&height=800&quality=95&format=auto",
       "address": "EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm",
       "pairAddress": "EP2ib6dYdEeqD8MfE2ezHCxX3kP3K2eLKkirfPm5eyMx"
@@ -70,10 +70,10 @@
     {
       "symbol": "PYTH",
       "name": "Pyth Network",
-      "price": 0.05042,
-      "change24h": 2.56962,
-      "volume24h": 42727827,
-      "marketCap": 396809222,
+      "price": 0.0517,
+      "change24h": 5.1931,
+      "volume24h": 44907735,
+      "marketCap": 406957572,
       "image": "https://cdn.dexscreener.com/cms/images/6041bc5bddf3e7905a571b913487bf6043b0438053007de8318e732f12d45270?width=800&height=800&quality=95&format=auto",
       "address": "HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3",
       "pairAddress": "9n3dSLrERZQp95dHXywft7xV8D8xnGFLaUHtEhQVaXaC"
@@ -81,10 +81,10 @@
     {
       "symbol": "HNT",
       "name": "Helium",
-      "price": 0.5602,
-      "change24h": -16.08271,
-      "volume24h": 37443352,
-      "marketCap": 104718745,
+      "price": 0.663,
+      "change24h": -9.41794,
+      "volume24h": 39311436,
+      "marketCap": 118558600,
       "image": "https://coin-images.coingecko.com/coins/images/4284/large/helium_logo_use.png?1748092589",
       "address": "hntyVP6YFm1Hg25TN9WGLqM12b8TQmcknKrdu1oxWux",
       "pairAddress": "91axdGmMoqQQg2MPUXKxT3bdqX4p2RMLXqZSQgXn2JpM"
@@ -92,10 +92,10 @@
     {
       "symbol": "RENDER",
       "name": "Render",
-      "price": 1.42,
-      "change24h": 0.54758,
-      "volume24h": 34739258,
-      "marketCap": 739608751,
+      "price": 1.41,
+      "change24h": -0.25282,
+      "volume24h": 34047736,
+      "marketCap": 733589052,
       "image": "https://coin-images.coingecko.com/coins/images/11636/large/rndr.png?1696511529",
       "address": "rndrizKT3MK1iimdxRdWabcF7Zg7AR5T4nud4EkHBof",
       "pairAddress": "FZ8MJvdTPbp8juhtFCCzb7LsKunhexgzShGQ59SUJkNL"
@@ -103,10 +103,10 @@
     {
       "symbol": "JTO",
       "name": "Jito",
-      "price": 0.4315,
-      "change24h": -1.82646,
-      "volume24h": 33733336,
-      "marketCap": 222675989,
+      "price": 0.4243,
+      "change24h": -4.30247,
+      "volume24h": 32784899,
+      "marketCap": 424320106,
       "image": "https://coin-images.coingecko.com/coins/images/33228/large/jto.png?1701137022",
       "address": "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL",
       "pairAddress": "G2FiE1yn9N9ZJx5e1E2LxxMnHvb1H3hCuHLPfKJ98smA"
@@ -114,10 +114,10 @@
     {
       "symbol": "FARTCOIN",
       "name": "Fartcoin",
-      "price": 0.17,
-      "change24h": -3.94167,
-      "volume24h": 32437701,
-      "marketCap": 170337644,
+      "price": 0.1668,
+      "change24h": -5.41938,
+      "volume24h": 31490239,
+      "marketCap": 166872633,
       "image": "https://cdn.dexscreener.com/cms/images/9af5672845c89585e9ff1e3b26a640090324aa4d92222052d1043e60ef8182de?width=800&height=800&quality=95&format=auto",
       "address": "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump",
       "pairAddress": "Bzc9NZfMqkXR6fz1DBph7BDf9BroyEf6pnzESP7v5iiw"
@@ -125,21 +125,21 @@
     {
       "symbol": "RAY",
       "name": "Raydium",
-      "price": 4023.02,
-      "change24h": 498761,
-      "volume24h": 2287190,
-      "marketCap": 1084360006081,
+      "price": 0.8154,
+      "change24h": 2.37,
+      "volume24h": 2314571,
+      "marketCap": 219790210,
       "image": "https://cdn.dexscreener.com/cms/images/654ec0cee3ecf3fd5d55c56302d82300ee114ee1ff91e52897798b486993f6c8?width=800&height=800&quality=95&format=auto",
       "address": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
-      "pairAddress": "EugpaMyuasiEmf51XQgGB9j8e4wwvQn7SEAHzdXiDX5N"
+      "pairAddress": "6UmmUiYoBjSrhakAobJw8BvkmJtDVxaeBtbt7rxWo1mg"
     },
     {
       "symbol": "KMNO",
       "name": "Kamino",
-      "price": 0.02341,
-      "change24h": -4.22,
-      "volume24h": 1287861,
-      "marketCap": 127081055,
+      "price": 0.02328,
+      "change24h": -4.36,
+      "volume24h": 1359028,
+      "marketCap": 126385989,
       "image": "https://cdn.dexscreener.com/cms/images/b3b9a0026bec75db0e4ecb6e023901a812dad85d3ffa1d2ec8b3a53ca498da31?width=800&height=800&quality=95&format=auto",
       "address": "KMNo3nJsBXfcpJTVhZcXLW7RmTwTt4GVFE7suUBo9sS",
       "pairAddress": "3ndjN1nJVUKGrJBc1hhVpER6kWTZKHdyDrPyCJyX3CXK"
@@ -148,9 +148,9 @@
       "symbol": "ORCA",
       "name": "Orca",
       "price": 1.21,
-      "change24h": -4.35,
-      "volume24h": 630132,
-      "marketCap": 64471418,
+      "change24h": -3.8,
+      "volume24h": 656983,
+      "marketCap": 64520693,
       "image": "https://cdn.dexscreener.com/cms/images/bfd0d54a2ff7a764291354b848f3f05c8b6b89213b16b240807e9cb9a78dd128?width=800&height=800&quality=95&format=auto",
       "address": "orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE",
       "pairAddress": "2ZnVuidTHpi5WWKUwFXauYGhvdT9jRKYv5MDahtbwtYr"
@@ -158,10 +158,10 @@
     {
       "symbol": "POPCAT",
       "name": "Popcat",
-      "price": 0.05178,
-      "change24h": -1.58,
-      "volume24h": 325385,
-      "marketCap": 50743955,
+      "price": 0.05143,
+      "change24h": -2.56,
+      "volume24h": 359747,
+      "marketCap": 50400369,
       "image": "https://cdn.dexscreener.com/cms/images/Pp6Fvh41hc0bHGK8?width=800&height=800&quality=95&format=auto",
       "address": "7GCihgDB8fe6KNjn2MYtkzZcRjQy3t9GHdC8uHYmW2hr",
       "pairAddress": "FRhB8L7Y9Qq41qZXYLtC2nw8An1RJfLLxRF2x9RwLLMo"
@@ -169,10 +169,10 @@
     {
       "symbol": "GRASS",
       "name": "Grass",
-      "price": 0.3481,
-      "change24h": -2.67,
-      "volume24h": 199146,
-      "marketCap": 235723240,
+      "price": 0.3418,
+      "change24h": -4.56,
+      "volume24h": 181586,
+      "marketCap": 231417831,
       "image": "https://cdn.dexscreener.com/cms/images/e76ab3c74a385a90ce2f77f9fc95a135d37671b782e4beea1268c604d6276d15?width=800&height=800&quality=95&format=auto",
       "address": "Grass7B4RdKfBCjTKgSqnXkqjwiGvQyFbuSCUJr3XXjs",
       "pairAddress": "GTJ2S27UL7yZ3TdTwpKjfNcxeEZRkRPHjpj5Fubwb8Mk"
@@ -180,10 +180,10 @@
     {
       "symbol": "MEW",
       "name": "cat in a dogs world",
-      "price": 0.0004034,
-      "change24h": -2.59,
-      "volume24h": 149522,
-      "marketCap": 35858392,
+      "price": 0.0004008,
+      "change24h": -3.16,
+      "volume24h": 149429,
+      "marketCap": 35634379,
       "image": "https://cdn.dexscreener.com/cms/images/33effe52dd5b1f6574ca5baaca9c02fecdecb557607a2a72889ceb0537eae9be?width=800&height=800&quality=95&format=auto",
       "address": "MEW1gQWJ3nEXg2qgERiKu7FAFj79PHvQVREQUzScPP5",
       "pairAddress": "879F697iuDJGMevRkRcnW21fcXiAeLJK1ffsw2ATebce"
@@ -191,10 +191,10 @@
     {
       "symbol": "NOS",
       "name": "Nosana",
-      "price": 0.2823,
-      "change24h": -3.17,
-      "volume24h": 93399,
-      "marketCap": 28236181,
+      "price": 0.2858,
+      "change24h": -2.46,
+      "volume24h": 87530,
+      "marketCap": 28583239,
       "image": "https://cdn.dexscreener.com/cms/images/ea718824b6ac3d695f53daf6be0c644bb5248d4c97fda509c824fe60309f6306?width=800&height=800&quality=95&format=auto",
       "address": "nosXBVoaCTtYdLvKY6Csb4AC8JCdQKKAaWYtx2ZMoo7",
       "pairAddress": "3GkFzURGWNWyErnjQvnkZpgcLnNocjnRwvMYXiVDiVQk"
@@ -202,10 +202,10 @@
     {
       "symbol": "W",
       "name": "Wormhole",
-      "price": 0.009717,
-      "change24h": 7.16,
-      "volume24h": 30706,
-      "marketCap": 25050999,
+      "price": 0.009589,
+      "change24h": 4.38,
+      "volume24h": 34986,
+      "marketCap": 24720613,
       "image": "",
       "address": "85VBFQZC9TZkfaptBWjvUw7YbZjy52A6mjtPGjstQAmQ",
       "pairAddress": "4gBdoceUxqqcyzgAqkN3wC5FivB34FwFJvTvgdUf6vLz"
@@ -213,10 +213,10 @@
     {
       "symbol": "TNSR",
       "name": "Tensor",
-      "price": 0.0343,
-      "change24h": -5.8,
-      "volume24h": 19790,
-      "marketCap": 10077522,
+      "price": 0.03437,
+      "change24h": -3.43,
+      "volume24h": 20096,
+      "marketCap": 10098225,
       "image": "https://cdn.dexscreener.com/cms/images/7bd64dcff550d1d4ee9307ea70654adb468959fac9284061c3f0c9ea14d4f57e?width=800&height=800&quality=95&format=auto",
       "address": "TNSRxcUxoT9xBG3de7PiJyTDYu7kskLqcpddxnEJAS6",
       "pairAddress": "7LqL8hDYVYBgoif19fSozZurxm3ve129tfkftz6WdFkR"
